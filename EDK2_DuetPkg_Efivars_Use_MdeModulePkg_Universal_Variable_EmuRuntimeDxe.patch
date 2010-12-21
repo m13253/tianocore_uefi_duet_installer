@@ -1,0 +1,39 @@
+diff --git a/DuetPkg/DuetPkg.fdf b/DuetPkg/DuetPkg.fdf
+index b029ef5..a5d50ea 100644
+--- a/DuetPkg/DuetPkg.fdf
++++ b/DuetPkg/DuetPkg.fdf
+@@ -47,7 +47,7 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
+ INF  MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
+ INF  MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
+ 
+-INF  DuetPkg/FSVariable/FSVariable.inf
++INF  MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
+ INF  MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
+ INF  MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+ INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
+diff --git a/DuetPkg/DuetPkgIa32.dsc b/DuetPkg/DuetPkgIa32.dsc
+index b0677e3..68b1818 100644
+--- a/DuetPkg/DuetPkgIa32.dsc
++++ b/DuetPkg/DuetPkgIa32.dsc
+@@ -174,7 +174,7 @@
+   MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
+   MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
+ 
+-  DuetPkg/FSVariable/FSVariable.inf
++  MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
+   MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
+   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+   MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
+diff --git a/DuetPkg/DuetPkgX64.dsc b/DuetPkg/DuetPkgX64.dsc
+index a83d705..5451a59 100644
+--- a/DuetPkg/DuetPkgX64.dsc
++++ b/DuetPkg/DuetPkgX64.dsc
+@@ -174,7 +174,7 @@
+   MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
+   MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
+ 
+-  DuetPkg/FSVariable/FSVariable.inf
++  MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
+   MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
+   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+   MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf

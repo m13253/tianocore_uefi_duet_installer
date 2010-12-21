@@ -1,0 +1,37 @@
+Setting up DUET USB flash drive in Windows :-
+
+1) Download HP USB Disk Storage Format Utility from this link http://www.4shared.com/file/143511399/975c2e6/HP_USB_Disk_Storage_Format_Utility.html and install it.
+
+2) Plug in your USB flash drive and unplug any other USB flash drive and/or any USB external Harddrives. Only the USB flash drive to be setup, should be connected to the computer and rest of the USB ports should be free.
+
+3) Run the HP software as an Administrator (Right Click -> Run as Administrator).
+
+4) Select the USB flash drive in HP USB Format Utility Dropdown menu and format it as FAT32 (not NTFS and not FAT16).
+
+   Do not format the USB flash drive directly using Windows. Formatting the drive directly using Windows will result in a USB "superfloppy" which will not boot DUET. 
+
+5) Safely Remove and Replug the USB flash drive.
+
+6) Open Windows Command Prompt with "Run as Administator" option (ie. Run "cmd" as Administrator).
+
+7) cd to the EFI_DUET folder.  Eg:- "cd C:\EFI_DUET && C:" (without quotes). Enter.
+
+8) Note down the drive letter of the USB flash drive.
+
+9) Type "CreateUSB.cmd Drive_Letter:" (without quotes). 
+   
+    Example :- "CreateUSB.cmd D:" (without quotes). (Here D: is the drive letter of the USB flash drive.)
+   
+    This command will format your USB flash drive to FAT32 filesystem, set up the MBR boot code and the FAT32 Boot Sector, necessary to boot DUET. But still the actual EFI Loader files have to be copied to the USB flash drive to make it boot DUET.
+
+10) Safely Remove and Replug the USB flash drive. This step is important before running Step 2. Do not close the command prompt Window. 
+
+11) Type "CreateUSB.cmd Drive_Letter: [DUET_BUILD]" (without quotes). 
+
+    Example :- "CreateUSB.cmd D: EDK_UEFI64" (without quotes).
+   
+    The possible arguments for DUET_BUILD are EDK_UEFI32 , EDK_UEFI64 , EDK2_X86 , EDK2_X64 (should be in CAPS).
+
+12) Safely Remove the USB flash drive and restart the system.
+
+13) Plug in the USB flash drive when the system reboots and set "Boot from USB" as the first option in your system's BIOS Boot order option.
