@@ -1,8 +1,8 @@
 diff --git a/DuetPkg/DuetPkg.fdf b/DuetPkg/DuetPkg.fdf
-index b029ef5..a5d50ea 100644
+index ca7d2be..bdf2d6f 100644
 --- a/DuetPkg/DuetPkg.fdf
 +++ b/DuetPkg/DuetPkg.fdf
-@@ -47,7 +47,7 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
+@@ -52,7 +52,7 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
  INF  MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
  INF  MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
@@ -11,24 +11,85 @@ index b029ef5..a5d50ea 100644
  INF  MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
  INF  MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
  INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
-diff --git a/DuetPkg/DuetPkgIa32.dsc b/DuetPkg/DuetPkgIa32.dsc
-index b0677e3..68b1818 100644
---- a/DuetPkg/DuetPkgIa32.dsc
-+++ b/DuetPkg/DuetPkgIa32.dsc
-@@ -174,7 +174,7 @@
-   MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
-   MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
+@@ -83,22 +83,40 @@ INF  IntelFrameworkModulePkg/Bus/Pci/VgaMiniPortDxe/VgaMiniPortDxe.inf
+ INF  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
  
--  DuetPkg/FSVariable/FSVariable.inf
-+  MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
-   MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
-   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
-   MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
+   # IDE Support
+-INF  IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
+-INF  PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
++# INF  IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
++# INF  PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
+ 
++  # VirtualBox IDE Support
++# INF  VBoxPkg/VBoxIdeBusDxe/VBoxIdeBusDxe.inf
++INF  VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
++
++  # ATA - IDE and AHCI Support
++INF  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
++INF  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
++
++  # Scsi Support
++INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
++INF  MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
++
++  # Various FS Utilities from VirtualBox
++# INF VBoxPkg/VBoxFsDxe/VBoxIso9660.inf
++# INF VBoxPkg/VBoxFsDxe/VBoxHfs.inf
++  
+   # Usb Support
+ INF  MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
+ INF  MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
+ INF  MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
+ INF  MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
++# INF  MdeModulePkg/Bus/Usb/UsbMouseDxe/UsbMouseDxe.inf
+ INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+ 
+   # ISA Support
+ INF  PcAtChipsetPkg/IsaAcpiDxe/IsaAcpi.inf
+ INF  IntelFrameworkModulePkg/Bus/Isa/IsaBusDxe/IsaBusDxe.inf
+-INF  IntelFrameworkModulePkg/Bus/Isa/IsaSerialDxe/IsaSerialDxe.inf
++# INF  IntelFrameworkModulePkg/Bus/Isa/IsaSerialDxe/IsaSerialDxe.inf
+ INF  IntelFrameworkModulePkg/Bus/Isa/Ps2KeyboardDxe/Ps2keyboardDxe.inf
+-INF  IntelFrameworkModulePkg/Bus/Isa/IsaFloppyDxe/IsaFloppyDxe.inf
++# INF  IntelFrameworkModulePkg/Bus/Isa/Ps2MouseDxe/Ps2MouseDxe.inf
++# INF  IntelFrameworkModulePkg/Bus/Isa/IsaFloppyDxe/IsaFloppyDxe.inf
+ 
+ INF  MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
+ INF  MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
+@@ -108,9 +126,12 @@ INF  DuetPkg/BiosVideoThunkDxe/BiosVideo.inf
+   # Binary INF file to support toggle among different CPU architectures.
+ INF  RuleOverride=BINARY FatBinPkg/EnhancedFatDxe/Fat.inf
+ 
+-FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
+-    SECTION RAW = MdeModulePkg/Logo/Logo.bmp
+-  }
++  # Include Minimum Shell
++# INF  RuleOverride=BINARY EdkShellBinPkg/MinimumShell/MinimumShell.inf
++
++# FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
++#    SECTION RAW = MdeModulePkg/Logo/Logo.bmp
++#  }
+ 
+ [Rule.Common.DXE_CORE]
+   FILE DXE_CORE = $(NAMED_GUID) {
+@@ -140,6 +161,12 @@ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
+         PE32     PE32                    $(INF_OUTPUT)/$(MODULE_NAME).efi
+   }
+ 
++[Rule.Common.UEFI_APPLICATION.BINARY]
++  FILE APPLICATION = $(NAMED_GUID) {
++    DXE_DEPEX    DXE_DEPEX Optional      |.depex
++        PE32     PE32                    |.efi
++  }
++
+ [Rule.Common.UEFI_DRIVER.BINARY]
+   FILE DRIVER = $(NAMED_GUID) {
+     DXE_DEPEX    DXE_DEPEX Optional      |.depex
 diff --git a/DuetPkg/DuetPkgX64.dsc b/DuetPkg/DuetPkgX64.dsc
-index a83d705..5451a59 100644
+index 142af25..247f7f3 100644
 --- a/DuetPkg/DuetPkgX64.dsc
 +++ b/DuetPkg/DuetPkgX64.dsc
-@@ -174,7 +174,7 @@
+@@ -175,7 +175,7 @@
    MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
    MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
@@ -37,3 +98,48 @@ index a83d705..5451a59 100644
    MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
    MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
+@@ -219,22 +219,40 @@
+   IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
+ 
+   # IDE Support
+-  IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
+-  PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
++  # IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
++  # PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
++  
++  # VirtualBox IDE Support
++  # VBoxPkg/VBoxIdeBusDxe/VBoxIdeBusDxe.inf
++  VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
++
++  # ATA - IDE and AHCI Support
++  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
++  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
++  
++  # Scsi Support
++  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
++  MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
++  
++  # Various FS Utilities from VirtualBox
++  # VBoxPkg/VBoxFsDxe/VBoxIso9660.inf
++  # VBoxPkg/VBoxFsDxe/VBoxHfs.inf
+ 
+   # Usb Support
+   MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
+   MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
+   MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
+   MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
++  # MdeModulePkg/Bus/Usb/UsbMouseDxe/UsbMouseDxe.inf
+   MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+ 
+   # ISA Support
+   PcAtChipsetPkg/IsaAcpiDxe/IsaAcpi.inf
+   IntelFrameworkModulePkg/Bus/Isa/IsaBusDxe/IsaBusDxe.inf
+-  IntelFrameworkModulePkg/Bus/Isa/IsaSerialDxe/IsaSerialDxe.inf
++  # IntelFrameworkModulePkg/Bus/Isa/IsaSerialDxe/IsaSerialDxe.inf
+   IntelFrameworkModulePkg/Bus/Isa/Ps2KeyboardDxe/Ps2keyboardDxe.inf
+-  IntelFrameworkModulePkg/Bus/Isa/IsaFloppyDxe/IsaFloppyDxe.inf
++  # IntelFrameworkModulePkg/Bus/Isa/Ps2MouseDxe/Ps2MouseDxe.inf
++  # IntelFrameworkModulePkg/Bus/Isa/IsaFloppyDxe/IsaFloppyDxe.inf
+ 
+   MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
+   MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
