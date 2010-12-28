@@ -1,5 +1,13 @@
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..d6174d6
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,2 @@
++VBoxPkg/
++FatPkg/
 diff --git a/DuetPkg/DuetPkg.fdf b/DuetPkg/DuetPkg.fdf
-index ca7d2be..bdf2d6f 100644
+index ca7d2be..cca769f 100644
 --- a/DuetPkg/DuetPkg.fdf
 +++ b/DuetPkg/DuetPkg.fdf
 @@ -52,7 +52,7 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
@@ -56,22 +64,16 @@ index ca7d2be..bdf2d6f 100644
  
  INF  MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
  INF  MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
-@@ -108,9 +126,12 @@ INF  DuetPkg/BiosVideoThunkDxe/BiosVideo.inf
+@@ -108,6 +126,9 @@ INF  DuetPkg/BiosVideoThunkDxe/BiosVideo.inf
    # Binary INF file to support toggle among different CPU architectures.
  INF  RuleOverride=BINARY FatBinPkg/EnhancedFatDxe/Fat.inf
  
--FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
--    SECTION RAW = MdeModulePkg/Logo/Logo.bmp
--  }
 +  # Include Minimum Shell
 +# INF  RuleOverride=BINARY EdkShellBinPkg/MinimumShell/MinimumShell.inf
 +
-+# FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
-+#    SECTION RAW = MdeModulePkg/Logo/Logo.bmp
-+#  }
- 
- [Rule.Common.DXE_CORE]
-   FILE DXE_CORE = $(NAMED_GUID) {
+ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
+     SECTION RAW = MdeModulePkg/Logo/Logo.bmp
+   }
 @@ -140,6 +161,12 @@ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
          PE32     PE32                    $(INF_OUTPUT)/$(MODULE_NAME).efi
    }
@@ -86,7 +88,7 @@ index ca7d2be..bdf2d6f 100644
    FILE DRIVER = $(NAMED_GUID) {
      DXE_DEPEX    DXE_DEPEX Optional      |.depex
 diff --git a/DuetPkg/DuetPkgX64.dsc b/DuetPkg/DuetPkgX64.dsc
-index 142af25..247f7f3 100644
+index 142af25..7baeb77 100644
 --- a/DuetPkg/DuetPkgX64.dsc
 +++ b/DuetPkg/DuetPkgX64.dsc
 @@ -175,7 +175,7 @@
