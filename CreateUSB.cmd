@@ -40,18 +40,18 @@ set PROCESSOR=X64
 @echo --------
 @echo Setting up FAT32 boot sector ...
 @echo --------
-@copy %BOOTSECTOR_BIN_DIR%\Bs32.com %BOOTSECTOR_BIN_DIR%\Bs32.com1
+@copy %BOOTSECTOR_BIN_DIR%\bs32.com %BOOTSECTOR_BIN_DIR%\bs32.com1
 @echo --------
-@%WIN_BIN_DIR%\Genbootsector.exe  --verbose -i %EFI_BOOT_DISK% -o UsbBs32.com
+@%WIN_BIN_DIR%\Genbootsector.exe  --verbose -i %EFI_BOOT_DISK% -o Usbbs32.com
 @echo --------
-@%WIN_BIN_DIR%\Bootsectimage.exe  --verbose -g UsbBs32.com %BOOTSECTOR_BIN_DIR%\Bs32.com1 -f 
+@%WIN_BIN_DIR%\Bootsectimage.exe  --verbose -g Usbbs32.com %BOOTSECTOR_BIN_DIR%\bs32.com1 -f 
 @echo --------
-@del UsbBs32.com
-@%WIN_BIN_DIR%\Genbootsector.exe  --verbose -o %EFI_BOOT_DISK% -i %BOOTSECTOR_BIN_DIR%\Bs32.com1 
+@del Usbbs32.com
+@%WIN_BIN_DIR%\Genbootsector.exe  --verbose -o %EFI_BOOT_DISK% -i %BOOTSECTOR_BIN_DIR%\bs32.com1 
 @echo --------
 @%WIN_BIN_DIR%\Genbootsector.exe  --verbose --mbr -o %EFI_BOOT_DISK% -i %BOOTSECTOR_BIN_DIR%\Mbr.com 
 @echo --------
-@del %BOOTSECTOR_BIN_DIR%\Bs32.com1
+@del %BOOTSECTOR_BIN_DIR%\bs32.com1
 @echo Done.
 @echo PLEASE UNPLUG USB, THEN PLUG IT AGAIN and PROCEED WITH STEP 2
 @echo -------- 

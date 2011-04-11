@@ -89,15 +89,15 @@ then
             echo Creating FAT32 boot sector ...
             echo "--------"
             
-            sudo cp ${BOOTSECTOR_BIN_DIR}/Bs32.com ${BOOTSECTOR_BIN_DIR}/Bs32.com1
+            sudo cp ${BOOTSECTOR_BIN_DIR}/bs32.com ${BOOTSECTOR_BIN_DIR}/bs32.com1
 
-            sudo ${LINUX_BIN_DIR}/GnuGenBootSector -i ${EFI_BOOT_DEVICE}1 -o UsbBs32.com
-            sudo ${LINUX_BIN_DIR}/BootSectImage -g UsbBs32.com ${BOOTSECTOR_BIN_DIR}/Bs32.com1 -f
-            sudo rm UsbBs32.com
-            sudo ${LINUX_BIN_DIR}/GnuGenBootSector -o ${EFI_BOOT_DEVICE}1 -i ${BOOTSECTOR_BIN_DIR}/Bs32.com1
+            sudo ${LINUX_BIN_DIR}/GnuGenBootSector -i ${EFI_BOOT_DEVICE}1 -o Usbbs32.com
+            sudo ${LINUX_BIN_DIR}/BootSectImage -g Usbbs32.com ${BOOTSECTOR_BIN_DIR}/bs32.com1 -f
+            sudo rm Usbbs32.com
+            sudo ${LINUX_BIN_DIR}/GnuGenBootSector -o ${EFI_BOOT_DEVICE}1 -i ${BOOTSECTOR_BIN_DIR}/bs32.com1
             sudo ${LINUX_BIN_DIR}/GnuGenBootSector --mbr -o ${EFI_BOOT_DEVICE} -i ${BOOTSECTOR_BIN_DIR}/Mbr.com
             
-            sudo rm ${BOOTSECTOR_BIN_DIR}/Bs32.com1
+            sudo rm ${BOOTSECTOR_BIN_DIR}/bs32.com1
   
             set +x +e
             
