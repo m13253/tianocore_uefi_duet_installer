@@ -1,38 +1,18 @@
-diff --git a/.gitignore b/.gitignore
-new file mode 100644
-index 0000000..d6174d6
---- /dev/null
-+++ b/.gitignore
-@@ -0,0 +1,2 @@
-+VBoxPkg/
-+FatPkg/
-diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
-index f54d507..5aae35e 100644
---- a/BaseTools/Conf/tools_def.template
-+++ b/BaseTools/Conf/tools_def.template
-@@ -2092,7 +2092,7 @@ DEFINE GCC45_ASM_FLAGS               = DEF(GCC44_ASM_FLAGS)
- *_ELFGCC_X64_VFRPP_PATH            = DEF(ELFGCC_BIN)/gcc
- *_ELFGCC_X64_RC_PATH               = DEF(ELFGCC_BIN)/objcopy
- 
--*_ELFGCC_X64_CC_FLAGS              = -Os -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-missing-braces -Wno-address -Wno-array-bounds -c -include AutoGen.h -D_EFI_P64
-+*_ELFGCC_X64_CC_FLAGS              = -fPIC -Os -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-missing-braces -Wno-address -Wno-array-bounds -c -include AutoGen.h -D_EFI_P64
- *_ELFGCC_X64_DLINK_FLAGS           = -nostdlib --shared --entry $(IMAGE_ENTRY_POINT) -u $(IMAGE_ENTRY_POINT)
- *_ELFGCC_X64_SLINK_FLAGS           =
- *_ELFGCC_X64_ASM_FLAGS             = -c -x assembler -imacros $(DEST_DIR_DEBUG)/AutoGen.h
 diff --git a/DuetPkg/DuetPkg.fdf b/DuetPkg/DuetPkg.fdf
-index ef4b5fe..c7c312b 100644
+index ef4b5fe..941756c 100644
 --- a/DuetPkg/DuetPkg.fdf
 +++ b/DuetPkg/DuetPkg.fdf
-@@ -52,7 +52,7 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
+@@ -52,7 +52,8 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
  INF  MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
  INF  MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
 -INF  DuetPkg/FSVariable/FSVariable.inf
 +INF  MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
++# INF  DuetPkg/FSVariable/FSVariable.inf
  INF  MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
  INF  MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
  INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
-@@ -67,7 +67,7 @@ INF  MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
+@@ -67,7 +68,7 @@ INF  MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
  INF  DuetPkg/SmbiosGenDxe/SmbiosGen.inf
  #INF  DuetPkg/FvbRuntimeService/DUETFwh.inf
  INF  IntelFrameworkModulePkg/Universal/BdsDxe/BdsDxe.inf
@@ -41,7 +21,7 @@ index ef4b5fe..c7c312b 100644
  INF  MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
  INF  UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
  INF  UefiCpuPkg/CpuDxe/CpuDxe.inf
-@@ -79,7 +79,7 @@ INF  PcAtChipsetPkg/8254TimerDxe/8254Timer.inf
+@@ -79,7 +80,7 @@ INF  PcAtChipsetPkg/8254TimerDxe/8254Timer.inf
  INF  PcAtChipsetPkg/PcatRealTimeClockRuntimeDxe/PcatRealTimeClockRuntimeDxe.inf
  INF  DuetPkg/PciRootBridgeNoEnumerationDxe/PciRootBridgeNoEnumeration.inf
  INF  DuetPkg/PciBusNoEnumerationDxe/PciBusNoEnumeration.inf
@@ -50,7 +30,7 @@ index ef4b5fe..c7c312b 100644
  INF  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
  
    # IDE/AHCI Support
-@@ -87,21 +87,31 @@ INF  DuetPkg/SataControllerDxe/SataControllerDxe.inf
+@@ -87,21 +88,31 @@ INF  DuetPkg/SataControllerDxe/SataControllerDxe.inf
  INF  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
  INF  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
  INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
@@ -85,7 +65,7 @@ index ef4b5fe..c7c312b 100644
  
  INF  MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
  INF  MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
-@@ -111,6 +121,9 @@ INF  DuetPkg/BiosVideoThunkDxe/BiosVideo.inf
+@@ -111,6 +122,9 @@ INF  DuetPkg/BiosVideoThunkDxe/BiosVideo.inf
    # Binary INF file to support toggle among different CPU architectures.
  INF  RuleOverride=BINARY FatBinPkg/EnhancedFatDxe/Fat.inf
  
@@ -95,7 +75,7 @@ index ef4b5fe..c7c312b 100644
  FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
      SECTION RAW = MdeModulePkg/Logo/Logo.bmp
    }
-@@ -143,6 +156,12 @@ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
+@@ -143,6 +157,12 @@ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
          PE32     PE32                    $(INF_OUTPUT)/$(MODULE_NAME).efi
    }
  
@@ -109,19 +89,29 @@ index ef4b5fe..c7c312b 100644
    FILE DRIVER = $(NAMED_GUID) {
      DXE_DEPEX    DXE_DEPEX Optional      |.depex
 diff --git a/DuetPkg/DuetPkgX64.dsc b/DuetPkg/DuetPkgX64.dsc
-index 5f0ec2b..acb1763 100644
+index 5f0ec2b..e19ea1c 100644
 --- a/DuetPkg/DuetPkgX64.dsc
 +++ b/DuetPkg/DuetPkgX64.dsc
-@@ -176,7 +176,7 @@
+@@ -28,7 +28,7 @@
+   DSC_SPECIFICATION              = 0x00010005
+   OUTPUT_DIRECTORY               = Build/DuetPkgX64
+   SUPPORTED_ARCHITECTURES        = X64
+-  BUILD_TARGETS                  = DEBUG
++  BUILD_TARGETS                  = DEBUG|RELEASE
+   SKUID_IDENTIFIER               = DEFAULT
+   FLASH_DEFINITION               = DuetPkg/DuetPkg.fdf
+ 
+@@ -176,7 +176,8 @@
    MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
    MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
 -  DuetPkg/FSVariable/FSVariable.inf
 +  MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
++  # DuetPkg/FSVariable/FSVariable.inf
    MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
    MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
-@@ -205,7 +205,7 @@
+@@ -205,7 +206,7 @@
      <LibraryClasses>
        PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
    }
@@ -130,7 +120,7 @@ index 5f0ec2b..acb1763 100644
    UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
    UefiCpuPkg/CpuDxe/CpuDxe.inf
    PcAtChipsetPkg/8259InterruptControllerDxe/8259.inf
-@@ -216,7 +216,7 @@
+@@ -216,7 +217,7 @@
    PcAtChipsetPkg/8254TimerDxe/8254Timer.inf
    DuetPkg/PciRootBridgeNoEnumerationDxe/PciRootBridgeNoEnumeration.inf
    DuetPkg/PciBusNoEnumerationDxe/PciBusNoEnumeration.inf
@@ -139,7 +129,7 @@ index 5f0ec2b..acb1763 100644
    IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
  
    # IDE/AHCI Support
-@@ -226,19 +226,29 @@
+@@ -226,19 +227,29 @@
    MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
  
@@ -171,15 +161,45 @@ index 5f0ec2b..acb1763 100644
  
    MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
    MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
-diff --git a/UnixPkg/UnixPkgX64.fdf b/UnixPkg/UnixPkgX64.fdf
-index 6ac1cdc..fa22a5e 100644
---- a/UnixPkg/UnixPkgX64.fdf
-+++ b/UnixPkg/UnixPkgX64.fdf
-@@ -245,7 +245,6 @@ INF  MdeModulePkg/Universal/Network/VlanConfigDxe/VlanConfigDxe.inf
- INF  MdeModulePkg/Universal/Network/Mtftp4Dxe/Mtftp4Dxe.inf
- INF  MdeModulePkg/Universal/Network/Tcp4Dxe/Tcp4Dxe.inf
- INF  MdeModulePkg/Universal/Network/Udp4Dxe/Udp4Dxe.inf
--
-  
- !if $(COMPILE_BINS)
- INF FatPkg/EnhancedFatDxe/Fat.inf
+diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
+index d6e070a..de32d73 100644
+--- a/OvmfPkg/OvmfPkgX64.dsc
++++ b/OvmfPkg/OvmfPkgX64.dsc
+@@ -338,8 +338,9 @@
+   MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
+   MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
+   MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
+-  IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
+-  PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
++  VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
++  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
++  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
+   MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
+   MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
+   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
+index 7ae95cd..54f00f9 100644
+--- a/OvmfPkg/OvmfPkgX64.fdf
++++ b/OvmfPkg/OvmfPkgX64.fdf
+@@ -186,8 +186,9 @@ INF  MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
+ INF  MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
+ INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
+ INF  MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
+-INF  IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
+-INF  PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
++INF  VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
++INF  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
++INF  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
+ INF  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
+ INF  MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
+ INF  MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+@@ -203,7 +204,8 @@ INF  MdeModulePkg/Universal/Acpi/AcpiPlatformDxe/AcpiPlatformDxe.inf
+ INF  RuleOverride=ACPITABLE OvmfPkg/AcpiTables/AcpiTables.inf
+ 
+ INF  RuleOverride = BINARY FatBinPkg/EnhancedFatDxe/Fat.inf
+-INF  RuleOverride = BINARY EdkShellBinPkg/FullShell/FullShell.inf
++INF  RuleOverride = BINARY ShellBinPkg/UefiShell/UefiShell.inf
++# INF  RuleOverride = BINARY EdkShellBinPkg/FullShell/FullShell.inf
+ 
+ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
+   SECTION RAW = MdeModulePkg/Logo/Logo.bmp
