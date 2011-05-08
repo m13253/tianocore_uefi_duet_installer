@@ -1,31 +1,37 @@
 Setting up DUET USB flash drive in Linux :-
 
-NOTE : All the commands in Linux (and other Unix systems) are Case-Sensitive. This is true for any command typed in the terminal as well as the commands used in the CreateUSB.sh shell script file.
-
+NOTE : All the commands in Linux (and other Unix systems) are Case-Sensitive. This is true for any command typed in the terminal.
 1) Plug in your USB flash drive and unplug any other USB flash drive and/or any USB external Harddrives. Only the USB flash drive to be setup, should be connected to the computer and rest of the USB ports should be free.
 
-2) Note down the device file name of your USB device (name of the form /dev/sdc) using GParted or Palimpest Disk Utility etc.
+2) Note down the device file name of your USB device. Let it be 'DEVICE' (for example /dev/sdc).
 
-3) Create a msdos or MBR disklabel in the USB device using using GParted or Palimpest Disk Utility (do not use partition the USB drive as GPT).
+3) Create a msdos or MBR disklabel in the USB device using using util-linux fdisk. Let the partition be 'PART' (for example /dev/sdc1).
 
-4) Create a single partition spanning the entire USB drive using GParted or Palimpest Disk Utility and format it using FAT32 filesystem.
+4) Create a partition spanning the entire USB drive using util-linux fdisk. Note down the Start LBA of that partition. Let it be 'STARTLBA'.
  
-5) Open the terminal and cd to the EFI_DUET folder.
+5) Create a FAT32 filesystem in that partition using
 
-6) Type "./CreateUSB.sh [DEVICE_FILENAME]" (without quotes). 
-   
-   Example :- "./CreateUSB.sh /dev/sdc" (without quotes).
-   
-   This command will reformat your USB flash drive to FAT32 filesystem, set up the MBR boot code and the FAT32 Boot Sector, necessary to boot DUET. But still the actual EFI Loader files have to be copied to the USB flash drive to make it boot DUET.
+   sudo mkfs.vfat -F32 -h ${STARTLBA} ${PART}
 
-7) Safely Remove and Replug the USB flash drive. This step is important before running Step 2. Do not close the terminal Window. 
-
-8) For step2 type "./CreateUSB.sh [DEVICE_FILENAME] [DUET_BUILD]" (without quotes). 
+6) Write the bootsector into the partition
 
-   Example :- "./CreateUSB.sh /dev/sdc EDK_UEFI64" (without quotes).
-   
-   The possible arguments for DUET_BUILD are EDK_UEFI32 , EDK_UEFI64 , EDK2_X86 , EDK2_X64 (should be in CAPS).
-
+	sudo dd if=EFI_DUET/BootSector/bd32.bin of=${PART} bs=1 skip=90 seek=90 count=420
+
+7) Cd into EFI_DUET/Linux_Source/C
+
+	make clean
+	make
+	
+	Then cd into EFI_DUET
+	
+	sudo EFI_DUET/Linux_Source/C/bin/GnuGenBootSector --mbr -o ${DEVICE} -i EFI_DUET/BootSector/Mbr.com 
+	
+	Safely Remove and Replug the USB flash drive. This step is important before running Step 2. Do not close the terminal Window.
+	
+8) For step2 type "./CreateUSB_old.sh [DEVICE_FILENAME] [DUET_BUILD]" (without quotes). 
+
+   Example :- "./CreateUSB_old.sh /dev/sdc EDK2_X64" (without quotes).
+   The possible arguments for DUET_BUILD are EDK_UEFI64 , EDK2_X64 (should be in CAPS).
 9) Safely Remove the USB flash drive and restart the system.
 
 10) Plug in the USB flash drive when the system reboots and set "Boot from USB" as the first option in your system's BIOS Boot order option.
