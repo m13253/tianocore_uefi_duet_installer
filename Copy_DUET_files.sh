@@ -3,6 +3,8 @@
 export WD="${PWD}/"
 export EFI_DUET_DIR="${WD}/"
 
+PROCESS_CONTINUE="TRUE"
+
 if [ \
 	"${1}" = "" -o \
 	"${1}" = "-h" -o \
@@ -22,22 +24,18 @@ then
 	echo "--------"
 	echo "The possible arguments for DUET_BUILD are UDK_X64 and EDK_UEFI64."
 	echo "--------"
-	echo "The possible arguments for FSVARIABLE are 0 or 1."
-	echo "--------"
 	echo "You need to have the permission and the root password to run sudo command in order to use this script."
 	echo "--------"
 	echo
 	export PROCESS_CONTINUE=FALSE
 fi
 
-if [ "${1}" = "" ]
+if [ "${PROCESS_CONTINUE}" = "TRUE" ]
 then
-	echo "PARTITION_MOUNTPOINT not defined"
-fi
-
-if [ "${2}" = "" ]
-then
-	echo "DUET_BUILD not defined"
+	if [ "${2}" = "" ]
+	then
+		echo "DUET_BUILD not defined"
+	fi
 fi
 
 export EFI_DUET_MP=${1}
@@ -51,9 +49,6 @@ export PROCESSOR="X64"
 
 export EFILDR_DIR="${EFI_DUET_DIR}/Efildr/${DUET_BUILD}/"
 export EXTRAS_DIR="${EFI_DUET_DIR}/Extras/${PROCESSOR}/"
-
-PROCESS_CONTINUE="TRUE"
-
 
 if [ "${PROCESS_CONTINUE}" = TRUE ]
 then
