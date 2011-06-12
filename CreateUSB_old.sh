@@ -12,9 +12,9 @@ export PROCESSOR=X64
 if [ "$2" = "EDK_UEFI64" ]
 then 
     SHELL_DIR=${EFI_DUET}/Shell/EDK_X64/
-elif [ "$2" = "EDK2_X64" ] 
+elif [ "$2" = "UDK_X64" ] 
 then 
-    SHELL_DIR=${EFI_DUET}/Shell/EDK2_X64/
+    SHELL_DIR=${EFI_DUET}/Shell/UDK_X64/
 fi
 
 LINUX_SOURCE_DIR=${EFI_DUET}/Linux_Source/C/
@@ -52,9 +52,9 @@ then
     echo "Safely Remove and replug the USB flash drive and then"
 	echo "--------"
     echo "Step 2 : ./CreateDUET.sh [DevicePath] [DUET_BUILD]"
-    echo "Example - Step 2 : ./CreateDUET.sh /dev/sdc EDK2_X64"
+    echo "Example - Step 2 : ./CreateDUET.sh /dev/sdc UDK_X64"
 	echo "--------"
-    echo "The possible arguments for DUET_BUILD are EDK2_X64 and EDK_UEFI64 ."
+    echo "The possible arguments for DUET_BUILD are UDK_X64 and EDK_UEFI64 ."
 	echo "--------"
     echo "You need to have the permission and the root password to run sudo command in order to use this script"
     echo "--------"	

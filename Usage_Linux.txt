@@ -30,8 +30,8 @@ NOTE : All the commands in Linux (and other Unix systems) are Case-Sensitive. Th
 	
 8) For step2 type "./CreateUSB_old.sh [DEVICE_FILENAME] [DUET_BUILD]" (without quotes). 
 
-   Example :- "./CreateUSB_old.sh /dev/sdc EDK2_X64" (without quotes).
-   The possible arguments for DUET_BUILD are EDK_UEFI64 , EDK2_X64 (should be in CAPS).
+   Example :- "./CreateUSB_old.sh /dev/sdc UDK_X64" (without quotes).
+   The possible arguments for DUET_BUILD are EDK_UEFI64 , UDK_X64 (should be in CAPS).
 9) Safely Remove the USB flash drive and restart the system.
 
 10) Plug in the USB flash drive when the system reboots and set "Boot from USB" as the first option in your system's BIOS Boot order option.

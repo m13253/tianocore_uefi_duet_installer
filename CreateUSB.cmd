@@ -7,7 +7,7 @@
 set PROCESSOR=X64
 
 @if "%2"=="EDK_UEFI64" set SHELL_DIR=%EFI_DUET%\Shell\EDK_X64
-@if "%2"=="EDK2_X64" set SHELL_DIR=%EFI_DUET%\Shell\EDK2_X64
+@if "%2"=="UDK_X64" set SHELL_DIR=%EFI_DUET%\Shell\UDK_X64
 
 @set WIN_BIN_DIR=%EFI_DUET%\Win_Bin
 @set BOOTSECTOR_BIN_DIR=%EFI_DUET%\BootSector
@@ -87,9 +87,9 @@ set PROCESSOR=X64
 @echo Safely Remove and replug the USB flash drive and then proceed to step 2 -
 @echo --------     
 @echo Step 2 : CreateUSB.bat Drive_Letter: [DUET_BUILD]
-@echo Example - Step 2 : CreateUSB.bat D: EDK2_X64
+@echo Example - Step 2 : CreateUSB.bat D: UDK_X64
 @echo --------     
-@echo The possible arguments for DUET_BUILD are  EDK2_X64 and EDK_UEFI64 .
+@echo The possible arguments for DUET_BUILD are  UDK_X64 and EDK_UEFI64 .
 @echo --------     
 
 :end

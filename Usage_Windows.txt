@@ -30,7 +30,7 @@ Setting up DUET USB flash drive in Windows :-
 
     Example :- "CreateUSB.cmd D: EDK_UEFI64" (without quotes).
    
-    The possible arguments for DUET_BUILD are EDK_UEFI32 , EDK_UEFI64 , EDK2_X86 , EDK2_X64 (should be in CAPS).
+    The possible arguments for DUET_BUILD are EDK_UEFI32 , EDK_UEFI64 , EDK2_X86 , UDK_X64 (should be in CAPS).
 
 12) Safely Remove the USB flash drive and restart the system.
 
