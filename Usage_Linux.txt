@@ -11,27 +11,30 @@ NOTE : All the commands in Linux (and other Unix systems) are Case-Sensitive. Th
  
 5) Create a FAT32 filesystem in that partition using
 
-   sudo mkfs.vfat -F32 -h ${STARTLBA} ${PART}
+	sudo mkfs.vfat -F32 -h ${STARTLBA} ${PART}
 
 6) Write the bootsector into the partition
 
-	sudo dd if=EFI_DUET/BootSector/bd32.bin of=${PART} bs=1 skip=90 seek=90 count=420
+	sudo dd if="${EFI_DUET_DIR}/BootSector/bd32.bin" of="${PART}" bs=1 skip=90 seek=90 count=420
 
-7) Cd into EFI_DUET/Linux_Source/C
-
+7) 
+	
+	cd ${EFI_DUET_DIR}/Linux_Source/C
+	
 	make clean
 	make
 	
-	Then cd into EFI_DUET
+	cd ${EFI_DUET_DIR}
 	
-	sudo EFI_DUET/Linux_Source/C/bin/GnuGenBootSector --mbr -o ${DEVICE} -i EFI_DUET/BootSector/Mbr.com 
+	sudo ${EFI_DUET_DIR}/Linux_Source/C/bin/GnuGenBootSector --mbr -o ${DEVICE} -i ${EFI_DUET_DIR}/BootSector/Mbr.com 
 	
-	Safely Remove and Replug the USB flash drive. This step is important before running Step 2. Do not close the terminal Window.
-	
-8) For step2 type "./CreateUSB_old.sh [DEVICE_FILENAME] [DUET_BUILD]" (without quotes). 
 
-   Example :- "./CreateUSB_old.sh /dev/sdc UDK_X64" (without quotes).
-   The possible arguments for DUET_BUILD are EDK_UEFI64 , UDK_X64 (should be in CAPS).
+Safely Remove and Replug the USB flash drive. This step is important before running Step 2. Do not close the terminal Window.
+
+8) For step2 type "./copy_duet_files.sh [PARTITION_MOUNTPOINT] [DUET_BUILD]" (without quotes). 
+
+   Example :- "./copy_duet_files.sh /media/EFI_DUET UDK_X64" (without quotes).
+   The possible arguments for DUET_BUILD are UDK_X64 or EDK_UEFI64 (should be in CAPS).
 9) Safely Remove the USB flash drive and restart the system.
 
 10) Plug in the USB flash drive when the system reboots and set "Boot from USB" as the first option in your system's BIOS Boot order option.
