@@ -19,12 +19,12 @@ if [ \
 then
 	echo
 	echo "--------"
-	echo "Step 2 : ./CreateDUET.sh [PARTITION_MOUNTPOINT] [DUET_BUILD]"
-	echo "Example - Step 2 : ./CreateDUET.sh /media/EFI_DUET UDK_X64"
+	echo "${0} [PARTITION_MOUNTPOINT] [DUET_BUILD]"
+	echo "Example - ${0} /media/EFI_DUET UDK_X64"
 	echo "--------"
 	echo "The possible arguments for DUET_BUILD are UDK_X64 and EDK_UEFI64."
 	echo "--------"
-	echo "You need to have the permission and the root password to run sudo command in order to use this script."
+	echo "You need to have the permission to run sudo command in order to use this script."
 	echo "--------"
 	echo
 	export PROCESS_CONTINUE=FALSE
