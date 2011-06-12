@@ -22,7 +22,7 @@ then
 	echo "${0} [PARTITION_MOUNTPOINT] [DUET_BUILD]"
 	echo "Example - ${0} /media/EFI_DUET UDK_X64"
 	echo "--------"
-	echo "The possible arguments for DUET_BUILD are UDK_X64 and EDK_UEFI64."
+	echo "The possible arguments for DUET_BUILD are UDK_X64 and EDK_UEFI64 (in CAPS)."
 	echo "--------"
 	echo "You need to have the permission to run sudo command in order to use this script."
 	echo "--------"
