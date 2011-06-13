@@ -809,6 +809,17 @@ public:
   }
 };
 
+class CIfrModal : public CIfrObj, public CIfrOpHeader {
+private:
+  EFI_IFR_MODAL *mModal;
+
+public:
+  CIfrModal () : CIfrObj (EFI_IFR_MODAL_TAG_OP, (CHAR8 **)&mModal),
+                 CIfrOpHeader (EFI_IFR_MODAL_TAG_OP, &mModal->Header) {
+  }
+};
+
+
 class CIfrLocked : public CIfrObj, public CIfrOpHeader {
 private:
   EFI_IFR_LOCKED *mLocked;
@@ -1478,6 +1489,21 @@ public:
 
   VOID SetRefreshInterval (IN UINT8 RefreshInterval) {
     mRefresh->RefreshInterval = RefreshInterval;
+  }
+};
+
+class CIfrRefreshId : public CIfrObj, public CIfrOpHeader {
+private:
+  EFI_IFR_REFRESH_ID *mRefreshId;
+
+public:
+  CIfrRefreshId () : CIfrObj (EFI_IFR_REFRESH_ID_OP, (CHAR8 **)&mRefreshId),
+      CIfrOpHeader (EFI_IFR_REFRESH_ID_OP, &mRefreshId->Header) {
+    memset (&mRefreshId->RefreshEventGroupId, 0, sizeof (EFI_GUID));
+  }
+
+  VOID SetRefreshEventGroutId (IN EFI_GUID *RefreshEventGroupId) {
+    memcpy (&mRefreshId->RefreshEventGroupId, RefreshEventGroupId, sizeof (EFI_GUID));
   }
 };
 

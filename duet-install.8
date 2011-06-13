@@ -1,0 +1,238 @@
+.\" Copyright 2011 Roderick W. Smith (rodsmith@rodsbooks.com)
+.\" May be distributed under the GNU General Public License
+.TH "DUET-INSTALL" "8" "0.1.1" "Roderick W. Smith" "duet-install Manual"
+.SH "NAME"
+duet-install \- Installer for SYSLINUX, BootDuet, and UEFI DUET
+.SH "SYNOPSIS"
+.BI "duet-install "
+[ \-64 ] [ \-e21 ] [ -F [-n \fIname\fR ] ] [ \-h ] [ \-m ]
+[ \-s \fIpath\fR ] [ -b \fIpath\fR ] [ -u \fIpath\fR ]
+[ \-iknowwhatimdoing ] \fIinstall-partition\fR
+
+.SH "DESCRIPTION"
+
+\fBduet-install\fR is a shell script that coordinates installation of three
+separate boot loader components:
+
+.TP 
+.B *
+\fISYSLINUX\fR, an MBR-resident boot loader that can direct the boot
+process to a partition. Versions of \fBSYSLINUX\fR for both Master Boot
+Record (MBR) and GUID Partition Table (GPT) disks are supported by
+\fBduet-install\fR.
+
+.TP
+.B *
+\fIBootDuet\fR, a boot loader that resides in the partition boot record
+(PBR; aka the boot block) of a File Allocation Table (FAT) partition and
+that redirects the boot process to a file that contains the third boot
+loader component....
+
+.TP
+.B *
+\fIUEFI DUET\fR, an implementation of the Unified Extensible Firmware
+Interface (UEFI) for BIOS-based computers. UEFI is intended as a
+replacement for the traditional BIOS, but if you need UEFI capabilities on
+an older computer, UEFI DUET can serve as a stopgap measure.
+
+.PP
+
+UEFI DUET motivates use of \fBduet-install\fR; if you have no need for UEFI
+DUET (or a similar tool), there's no reason to use \fBduet-install\fR.
+Although there are few or no compelling reasons to favor UEFI over BIOS in
+a Linux-only installation, there are reasons to favor UEFI over BIOS for
+some other OSes, and therefore also for some dual-boot configurations.
+Most notably, Windows (through at least Windows 7) cannot boot from a GPT
+disk except on a UEFI-based computer. Since MBR disks are limited to 2 TiB
+in size (assuming 512-byte sector sizes), Windows cannot boot from disks
+over this size except by using UEFI or, in a more limited way, an ugly and
+dangerous hack such as a hybrid MBR. UEFI DUET enables Windows to boot from
+a GPT disk, and so is desirable in such situations, or if you simply want
+to use GPT rather than MBR in any Windows-only or dual-boot configuration.
+
+Configuring UEFI DUET has been very difficult until about 2010, however; it
+has been available only in source code form, and the build process is
+rather obscure. Keshav P. R. (aka Skodabenz) has made binary UEFI DUET
+builds available, and Miguel Lopes Santos Ramos has created a new boot
+loader (BootDuet) that enables UEFI DUET to boot from a hard disk (former
+implementations required installation to a floppy disk or USB flash drive).
+Installing these components, along with a suitable MBR-based boot loader,
+has remained complicated, though. The goal of \fIduet-install\fR is to
+reduce this complexity.
+
+Prerequisites for use of \fIduet-install\fR are the following:
+
+.TP
+.B *
+Binaries for UEFI DUET, BootDuet, and SYSLINUX must be available on the
+computer. SYSLINUX is available as a package in most distributions.
+BootDuet source code and UEFI DUET binaries can be obtained from GitHub
+repositories (see the "See Also" section).
+
+.TP
+.B *
+An assortment of common Linux utilities must be installed, including
+GNU Parted (\fIparted\fR), \fIsfdisk\fR, \fIsgdisk\fR, \fImkdosfs\fR,
+\fIdd\fR, \fIsed\fR, and \fIxxd\fR (part of the \fIvim\fR package).
+
+.TP
+.B *
+\fIduet-install\fR relies on Linux-specific features; it will not work on
+other OSes.
+
+.TP
+.B *
+A disk (a hard disk or USB flash drive, typically) must be partitioned
+using either MBR or GPT, with one partition set aside as the target for
+BootDuet and UEFI DUET installation. This partition must either already
+contain a FAT filesystem or have no data worth saving, since BootDuet can
+only be installed to a FAT filesystem. On a GPT disk, an EFI System
+Partition (ESP) is an excellent installation target.
+
+.TP
+.B *
+Although not required, you may want to edit the script to point to the
+locations where the SYSLINUX, BootDuet, and UEFI DUET files are located.
+These are specified by the \fBbootDuetPath\fR, \fBuefiDuetPath\fR, and
+\fBsyslinuxPath\fR variables near the start of the file.
+
+.PP
+
+Although this description has referenced SYSLINUX, it is not the only boot
+loader that can be used in conjunction with BootDuet, although it is the
+only MBR-resident boot loader that \fIduet-install\fR can install. If your
+computer currently uses GRUB, you can use \fIduet-install\fR to install
+BootDuet and UEFI DUET to a FAT partition, leaving your MBR untouched and
+GRUB in control of the computer. You can then configure GRUB to chainload
+to the UEFI DUET partition.
+
+If \fIduet-install\fR runs successfully, it will install SYSLINUX (if you
+specify the \fB\-m\fR option), BootDuet, and UEFI DUET. The computer will
+then boot into a UEFI DUET configuration screen the next time you reboot.
+You will need to install OS\-specific UEFI boot loaders to boot an actual
+OS. For Linux, ELILO and GRUB 2 are the most common choices for this role.
+The rEFIt boot selector is sometimes desirable to choose between OSes;
+however, UEFI DUET can only boot a purely 64-bit version of rEFIt, not the
+mixed 32-/64-bit binaries that are most commonly available. (Ubuntu 11.04,
+at least, ships with a suitable 64-bit binary.)
+
+\fIduet\-install\fR stores copies of the original MBR and PBR code in the
+\fB/root/duet\-install\-backups/\fB directory. The program numbers the
+backups sequentially, so mbr\-backup.0 and pbr\-backup.0 are always the
+oldest backup files.
+
+.SH "OPTIONS"
+
+.TP 
+.B \-64
+Write a version of BootDuet that uses 64-bit LBA sector addressing rather
+than the default 32-bit LBA sector addressing. This feature is only
+required if you're using a disk over 2 TiB in size and then only if the
+UEFI DUET partition spans or falls above the 2 TiB mark. This feature is
+incompatible with the use of FAT-12 on the UEFI DUET partition.
+
+.TP 
+.B \-e21
+Install the older UEFI DUET based on the UEFI 2.1 specification rather
+than the newer version based on the UEFI 2.3 specification. The 2.1 version
+lacks support for SATA AHCI mode, among other things; but some computers
+crash when they run the newer UEFI 2.3 version.
+
+.TP 
+.B \-F
+Create a FAT filesystem on the target device. This option also changes the
+type code of the partition to 0xEF on MBR disks or to
+C12A7328\-F81F\-11D2\-BA4B\-00A0C93EC93B (EF00 in \fIgdisk\fR or the "boot
+flag" is set in most libparted\-based tools) on GPT disks. These type codes
+identify a disk's EFI System Partition. If this option
+is omitted, no filesystem is created, and if you specify a non-FAT
+partition, \fIduet-install\fR aborts. \fIduet\-install\fR creates a FAT32
+filesystem on disks larger than 66,586 sectors (the minimum supported by
+\fImkdosfs\R) and lets \fImkdosfs\fR decide whether to create FAT12 or
+FAT16 for smaller filesystems.
+
+.TP 
+.B \-n \fIname\fR
+Specify a name for the FAT filesystem created with the \fB\-F\fR option.
+
+.TP
+\fB\-h\fR or \fB\-\-help\fR
+Display a brief usage summary.
+
+.TP 
+.B \-m
+Install SYSLINUX to the disk's MBR. The appropriate version for your disk's
+partitioning system (MBR or GPT) is automatically selected.
+
+.TP 
+.B \-b \fIpath\fR
+Specify the path to the BootDuet binaries.
+
+.TP 
+.B \-s \fIpath\fR
+Specify the path to the SYSLINUX binaries.
+
+.TP 
+.B \-u \fIpath\fR
+Specify the path to the UEFI DUET binaries.
+
+.TP 
+.B \-iknowwhatimdoing
+Omit a prompt to continue prior to the program writing data to the disk.
+
+.TP 
+.B \fIinstall\-partition\fR
+The partition to which BootDuet and UEFI DUET are installed. You must
+either use the \fB\-F\fR option or ensure that it already contain a FAT
+filesystem.
+
+
+.PP
+
+.SH "BUGS"
+As of June 2011 (version 0.1.1), \fBduet-install\fR
+should be considered beta software. Known bugs and limitations include:
+
+.TP 
+.B *
+The program run only on Linux.
+
+.TP 
+.B *
+Writing the BootDuet files to a FAT-32 partition causes the main and backup
+boot sectors to fall out of sync. Linux's fsck reports this as an error,
+although Windows' disk check does not. It seems to have little or no
+practical effect.
+
+.TP
+.B *
+The script assumes that partition device filenames take the form
+\fI/dev/[hs]dL#\fR, where \fIL\fR is a single letter and \fI#\fR is a number
+(one or more digits). In particular, the partition number is assumed to
+start at the 8th character of the device filename. If you use an unusual
+device-naming system or if you insert characters (as in \fI/dev//sda1\fR),
+the script will probably abort, but could conceivably misbehave in a
+damaging way.
+
+.PP 
+
+.SH "AUTHORS"
+Primary author: Roderick W. Smith (rodsmith@rodsbooks.com)
+
+.SH "SEE ALSO"
+\fBmkfs (8)\fR,
+\fBmkdosfs (8)\fR,
+\fBparted (8)\fR,
+\fBsfdisk (8)\fR,
+\fBsgdisk (8)\fR
+
+\fIhttps://github.com/migle/BootDuet\fR
+
+\fIhttps://github.com/skodabenz/EFI_DUET\fR
+
+\fIhttp://www.rodsbooks.com/gdisk/\fR
+
+\fIhttp://www.insanelymac.com/forum/index.php?showtopic=186440\fR
+
+.SH "AVAILABILITY"
+The \fBduet\-install\fR command is available from Roderick W. Smith.

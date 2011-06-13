@@ -237,6 +237,7 @@ VfrParserStart (
 #token EndGuidOp("endguidop")                   "endguidop"
 #token DataType("datatype")                     "datatype"
 #token Data("data")                             "data"
+#token Modal("modal")                           "modal"
 
 //
 // Define the class and subclass tokens
@@ -1251,7 +1252,8 @@ vfrFormDefinition :
     vfrStatementBanner                       |
     // Just for framework vfr compatibility
     vfrStatementInvalid                      |
-    vfrStatementExtension
+    vfrStatementExtension                    |
+    vfrStatementModal
   )*
   E:EndForm                                         <<
                                                       if (mCompatibleMode) {
@@ -1310,7 +1312,8 @@ vfrFormMapDefinition :
     vfrStatementConditional                  |
     vfrStatementLabel                        |
     vfrStatementBanner                       |
-    vfrStatementExtension
+    vfrStatementExtension                    |
+    vfrStatementModal
   )*
   E:EndForm                                         << CRT_END_OP (E); >>
   ";"
@@ -2339,7 +2342,8 @@ vfrStatementQuestionTag :
   vfrStatementDisableIfQuest    |
   vfrStatementRefresh           |
   vfrStatementVarstoreDevice    |
-  vfrStatementExtension
+  vfrStatementExtension         |
+  vfrStatementRefreshEvent
   ;
 
 vfrStatementQuestionTagList :
@@ -2490,6 +2494,11 @@ vfrLockedTag :
   L:Locked                                             << LObj.SetLineNo(L->getLine()); >>
   ;
 
+vfrModalTag :
+  << CIfrModal MObj; >>
+  L:Modal                                             << MObj.SetLineNo(L->getLine()); >>
+  ;
+
 vfrStatementStatTag :
   vfrImageTag  |
   vfrLockedTag
@@ -2501,6 +2510,11 @@ vfrStatementStatTagList :
 
 vfrStatementImage :
   vfrImageTag
+  ";"
+  ;
+
+vfrStatementModal :
+  vfrModalTag
   ";"
   ;
 
@@ -2541,6 +2555,15 @@ vfrStatementRefresh :
   << CIfrRefresh RObj; >>
   L:Refresh                                            << RObj.SetLineNo(L->getLine()); >>
   Interval "=" I:Number                                << RObj.SetRefreshInterval (_STOU8(I->getText())); >>
+  ;
+
+vfrStatementRefreshEvent :
+  <<
+    CIfrRefreshId RiObj;
+    EFI_GUID      Guid;
+  >>
+  L:RefreshGuid                                        << RiObj.SetLineNo(L->getLine()); >>
+  "="  guidDefinition[Guid] ","                        << RiObj.SetRefreshEventGroutId (&Guid);  >>
   ;
 
 vfrStatementVarstoreDevice :
@@ -2811,6 +2834,7 @@ vfrStatementInvalidSaveRestoreDefaults :
 #token QuestionRefVal("questionrefval")         "questionrefval"
 #token StringRefVal("stringrefval")             "stringrefval"
 #token Map("map")                               "map"
+#token RefreshGuid("refreshguid")               "refreshguid"
 
 //
 // Root expression extension function called by other function.

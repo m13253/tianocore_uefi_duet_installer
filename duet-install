@@ -14,22 +14,26 @@
 # disk that, when booted, makes a BIOS-based computer act like
 # one with a Unified Extensible Firmware Interface (UEFI).
 #
+# Version 0.1.1 - code cleanup, 6/??/2011
 # Version 0.1.0 - initial release, 6/11/2011
 
+minFat32Size=66586
+
 bootDuetPath=~/bootduet/bootduet
-uefiDuetPath=~/bootduet/skodabenz-EFI_DUET-d2d0e7f
+uefiDuetPath=~/bootduet/skodabenz-EFI_DUET-31cfe17
 syslinuxPath=/usr/share/syslinux
+copyDuetScript=copy_duet_files.sh
 tempMountPoint=/tmp/installduet
+
 
 promptToContinue=1
 installSyslinux=0
 mkfsTarget=0
 uefiVersion=2.3
 efildrFile="Efildr20"
-fsVariable=0
 targetPart=""
+tableType=""
 partName="ESP"
-installExtraFiles=1
 origMountPoint=""
 lbaMode=32
 
@@ -42,11 +46,9 @@ lbaMode=32
 
 # Display usage information
 ShowHelp() {
-   echo "Usage: installduet.sh [-d] [-e21 | -v] [-F [-n name]] [-h] [-m] [-v] [-s path] [-b path] [-u path] [-iknowwhatimdoing] install-partition"
-   echo "  -64 = Use BootDuet with 64-bit LBA (for >2TiB disks; no 12-bit FAT)"
-   echo "  -d = Don't install extra .efi files (shell, efichk, diskpart, and efifmt)"
+   echo "Usage: duet-install [-64] [-e21 ] [-F [-n name]] [-h] [-m] [-v] [-s path] [-b path] [-u path] [-iknowwhatimdoing] install-partition"
+   echo "  -64 = Use the LBA-64 version of BootDuet (for >2TiB disks; no 12-bit FAT)"
    echo "  -e21 = Install EDK-based UEFI 2.1 rather than EDK2-based UEFI 2.3"
-   echo "  -v = Use Efildr*_FSVariable variant file (mutually exclusive with -e21)"
    echo "  -F = Create a new FAT filesystem on the target partition"
    echo "  -n name = Set FAT filesystem's name to 'name' (valid only with -F)"
    echo "  -h = This help"
@@ -75,21 +77,7 @@ GetParams() {
          -F) mkfsTarget=1
 	     ;;
          -e21) uefiVersion="2.1"
-               if [[ $fsVariable == "1" ]] ; then
-                  echo "The -v and -e21 options are mutually exclusive. Aborting!"
-                  exit 1
-               else
-                  echo "Will install UEFI 2.1 rather than UEFI 2.3"
-               fi
                ;;
-         -d) installExtraFiles="0"
-             ;;
-         -v) fsVariable="1"
-             if [[ $uefiVersion == "2.1" ]] ; then
-                echo "The -e21 and -v options are mutually exclusive. Aborting!"
-                exit 1
-             fi
-             ;;
          -b) bootDuetPath=$2
              shift
              ;;
@@ -122,9 +110,6 @@ GetParams() {
    echo "Path to bootduet is $bootDuetPath"
    echo "Path to UEFI DUET is $uefiDuetPath"
    echo "Will install UEFI version $uefiVersion"
-   if [[ $fsVariable == "1" ]] ; then
-      echo "Will install FSVariable version of UEFI 2.3"
-   fi
    echo "Target partition is $targetPart"
    if [[ $mkfsTarget == "1" ]] ; then
       echo "Will create a FAT filesystem called '$partName' on the target partition"
@@ -142,7 +127,14 @@ GetParams() {
 # location and size for BootDuet, efildrFile and efildrTarget variables
 # Stores the value in fatBitness
 GetFatBitness() {
-   fatBitness=`file -s $targetPart | sed 's/FAT (/\nFAT /' | grep bit | sed 's/)/\n/' | grep bit | sed 's/FAT //' | sed 's/ bit//'`
+   if [[ `blkid -v | grep util-linux` != "" ]] ; then
+      # use blkid from util-linux to identify FAT size, if possible....
+      fatBitness=`blkid -p -i $targetPart | grep VERSION | cut -f 2 -d "=" | sed s/FAT//`
+   else
+      # if blkid not present or if it's the wrong version, fall back on a more
+      # complex and possibly less reliable method....
+      fatBitness=`file -s $targetPart | sed 's/FAT (/\nFAT /' | grep bit | sed 's/)/\n/' | grep bit | sed 's/FAT //' | sed 's/ bit//'`
+   fi
    if [[ $fatBitness != "12" && $fatBitness != "16" && $fatBitness != "32" ]] ; then
       echo "Could not determine bit size of FAT filesystem on $targetPart! Aborting!"
       exit 1
@@ -153,9 +145,6 @@ GetFatBitness() {
       bootDuetCount="448"
       bootDuetFile=$bootDuetPath/bd12.bin
       efildrTarget=Efildr
-      if [[ $fsVariable == "1" ]] ; then
-         efildrFile="Efildr_FSVariable"
-      fi
    fi
    if [[ $fatBitness == "16" ]] ; then
       bootDuetSkip="62"
@@ -167,9 +156,6 @@ GetFatBitness() {
 	 bootDuetCount="444"
       fi
       efildrTarget=Efildr16
-      if [[ $fsVariable == "1" ]] ; then
-         efildrFile="Efildr16_FSVariable"
-      fi
    fi
    if [[ $fatBitness == "32" ]] ; then
       bootDuetSkip="90"
@@ -181,9 +167,6 @@ GetFatBitness() {
 	 bootDuetCount="416"
       fi
       efildrTarget=Efildr20
-      if [[ $fsVariable == "1" ]] ; then
-         efildrFile="Efildr20_FSVariable"
-      fi
    fi
 } # GetFatBitness()
 
@@ -196,10 +179,6 @@ FindStuff() {
    else
       echo "This program requires the dd program! Aborting!"
       exit 1
-   fi
-   which awk &> /dev/null
-   if [[ $? -eq 0 ]] ; then
-      AWK=`which awk`
    fi
    which sed &> /dev/null
    if [[ $? -eq 0 ]] ; then
@@ -235,13 +214,25 @@ FindStuff() {
       exit 1
    fi
 
+   targetDisk=`echo $targetPart | cut -b 1-8`
+   echo "Target disk (for storing MBR boot code) is $targetDisk"
+   sysfsPath=/sys/class/block/`echo $targetPart | sed s/\\\/dev\\\///`
+   partNum=`cat $sysfsPath/partition`
+   echo "Partition number is $partNum"
+
+   # Find offset to partition
+   partStartSector=`cat $sysfsPath/start`
+   echo "Partition starts at sector $partStartSector"
+   
    # If user didn't specify -F, check to see if it's a valid FAT filesystem....
    if [[ $mkfsTarget == "0" ]] ; then
       blkid $targetPart | grep vfat &> /dev/null
       # grep returns 0 when "vfat" found....
       if [[ $? -eq 0 ]] ; then
-         echo "FAT filesystem found on $targetPart"
          GetFatBitness
+         echo -n "FAT"
+	 echo -n $fatBitness
+	 echo " filesystem found on $targetPart"
       else
          echo "Non-FAT filesystem found on $targetPart! Aborting!"
 	 exit 1
@@ -249,25 +240,20 @@ FindStuff() {
    fi # if will NOT be making filesystem on target partition
 
    # Determine the partition table type
-   tableType=`udevadm info -q property -n $targetPart | grep PARTITION_SCHEME | cut -f 2 -d "="`
+   if [[ `file -s $targetDisk | grep partition | grep starthead` ]] ; then
+      tableType="mbr"
+      if [[ `file -s $targetDisk | grep 0xee` ]] ; then
+         tableType="gpt"
+      fi
+   fi
    if [[ $tableType != "mbr" && $tableType != "gpt" ]] ; then
       echo "Unknown partition table type '$tableType'! Aborting!"
+      exit 1
    else
       echo "Partition table type is $tableType"
    fi
 
-   # Find partition number & whole-disk device node
-   partNum=`udevadm info -q property -n $targetPart | grep UDISKS_PARTITION_NUMBER | cut -f 2 -d "="`
-   echo "Partition number is $partNum"
-   sysfsPath=`udevadm info -q property -n $targetPart | grep UDISKS_PARTITION_SLAVE | cut -f 2 -d "="`
-   targetDiskNode=`cat $sysfsPath/uevent | grep DEVNAME | cut -f 2 -d "="`
-   targetDisk="/dev/$targetDiskNode"
-   echo "Target disk (for storing MBR boot code) is $targetDisk"
 
-   # Find offset to partition
-   partStartSector=`cat $sysfsPath/$targetDiskNode$partNum/start`
-   echo "Partition starts at sector $partStartSector"
-   
    # Verify presence of SYSLINUX files, if necessary
    if [[ $installSyslinux == "1" ]] ; then
       if [[ $tableType == "gpt" ]] ; then
@@ -298,14 +284,10 @@ FindStuff() {
       fi
    fi # BootDuet file verification
 
-   # Verify presence of UEFI DUET directory's path...
-   if [[ $uefiVersion == "2.3" ]] ; then
-      efildrPath=$uefiDuetPath/Efildr/EDK2_X64/
-   else # UEFI 2.1
-      efildrPath=$uefiDuetPath/Efildr/EDK_UEFI64/
-   fi # UEFI 2.3 vs. 2.1
-   if [[ ! -d $efildrPath ]] ; then
-      echo "UEFI loader directory '$efildrPath' not found! Aborting!"
+   # Verify presence of UEFI DUET directory's copy_duet_files.sh file;
+   # assume everything else is present if that is....
+   if [[ ! -e $uefiDuetPath/$copyDuetScript ]] ; then
+      echo "UEFI installation script not found! Aborting!"
       exit 1
    fi
 
@@ -341,13 +323,29 @@ FindStuff() {
    echo ""
 } # FindStuff()
 
-# Returns hexadecimal representation of the input number, in little-endian
-# byte order. Result is stored in hexValue global variable
-# CAUTION: Useful only for 32-bit and smaller values
+# Backs up the original MBR and PBR
+BackupBootCode() {
+   extension=0
+   mkdir -p /root/duet-install-backups
+   filename=/root/duet-install-backups/mbr-backup.$extension
+   while [[ -e /root/duet-install-backups/mbr-backup.$extension ]]
+   do
+      extension=`expr $extension + 1`
+   done
+   dd if=$targetDisk of=/root/duet-install-backups/mbr-backup.$extension bs=512 count=1 &> /dev/null
+   while [[ -e /root/duet-install-backups/pbr-backup.$extension ]]
+   do
+      extension=`expr $extension + 1`
+   done
+   dd if=$targetPart of=/root/duet-install-backups/pbr-backup.$extension bs=512 count=1 &> /dev/null
+} # BackupBootCode
+
+# Returns 4-byte hexadecimal representation of the input number, in
+# little-endian byte order. Result is stored in hexValue global variable
+# $1 = Input number to be returned in hex
 GetHex() {
-#   hexValue=`echo ""$1 16" o p" | dc`
-   hexTemp=`printf '%08x' $1`
    hexValue=""
+   hexTemp=`printf '%08x' $1`
    for start in 7 5 3 1 ; do
       let end=($start)+1
       hexValue=$hexValue`echo $hexTemp | cut -b $start-$end`" "
@@ -370,7 +368,12 @@ PrepareDisk() {
    fi # Target partition mounted
 
    if [[ $mkfsTarget == "1" ]] ; then
-      $MKDOSFS -h $partStartSector -n $partName $targetPart &> /dev/null
+      partSize=`cat $sysfsPath/size`
+      if [[ `cat $sysfsPath/size` -lt $minFat32Size ]] ; then
+         $MKDOSFS -h $partStartSector -n $partName $targetPart &> /dev/null
+      else
+         $MKDOSFS -F 32 -h $partStartSector -n $partName $targetPart &> /dev/null
+      fi
       if [[ $? -ne 0 ]] ; then
          echo "Unable to create FAT filesystem on $targetPart! Aborting!"
 	 exit 1
@@ -445,18 +448,18 @@ InstallUefiDuet() {
       echo "Couldn't mount target partition! Unable to install UEFI DUET files. Aborting!"
       exit 1
    fi
-   cp $efildrPath/$efildrFile $tempMountPoint/$efildrTarget
-   if [[ $installExtraFiles == "1" ]] ; then
-      mkdir -p $tempMountPoint/EFI/Extras
-      mkdir -p $tempMountPoint/EFI/Shell
-      cp -r $uefiDuetPath/Extras/X64/*efi $tempMountPoint/EFI/Extras
-      if [[ $uefiVersion == "2.3" ]] ; then
-         cp $uefiDuetPath/Shell/EDK2_X64/Shell_Full.efi $tempMountPoint/EFI/Shell/Shell.efi
-      else # UEFI version 2.1
-         cp $uefiDuetPath/Shell/EDK_X64/Shell_Full.efi $tempMountPoint/EFI/Shell/Shell.efi
-         cp $uefiDuetPath/Shell/EDK_X64/LoadFv.efi $tempMountPoint/EFI/Shell/
-      fi # UEFI version
-   fi # install extra files
+   # $copyDuetScript only works from its own directory, so cd in and then back
+   currentDir=`pwd`
+   cd $uefiDuetPath
+   if [[ $uefiVersion == "2.3" ]] ; then
+      sh $copyDuetScript $tempMountPoint UDK_X64 &> /dev/null
+   else
+      sh $copyDuetScript $tempMountPoint EDK_UEFI64 &> /dev/null
+   fi
+   cd $currentDir
+   if [[ $fatBitness != "32" ]] ; then
+      mv $tempMountPoint/EFILDR20 $tempMountPoint/$efildrTarget
+   fi
 
    if [[ $origMountPoint == "" ]] ; then
       umount $tempMountPoint
@@ -482,6 +485,7 @@ if [[ $promptToContinue == "1" ]] ; then
       exit 0
    fi
 fi
+BackupBootCode
 PrepareDisk
 InstallSyslinux
 InstallBootDuet
