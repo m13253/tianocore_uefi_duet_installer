@@ -20,7 +20,8 @@ then
 	echo
 	echo "--------"
 	echo "${0} [PARTITION_MOUNTPOINT] [DUET_BUILD]"
-	echo "Example - ${0} /media/EFI_DUET UDK_X64"
+	echo "--------"
+	echo "Example : ${0} /media/EFI_DUET UDK_X64"
 	echo "--------"
 	echo "The possible arguments for DUET_BUILD are UDK_X64 and EDK_UEFI64 (in CAPS)."
 	echo "--------"
