@@ -9,10 +9,10 @@ set PROCESSOR=X64
 @if "%2"=="UDK_X64" set SHELL_DIR=%EFI_DUET%\Shell\UDK_X64
 @if "%2"=="EDK_UEFI64" set SHELL_DIR=%EFI_DUET%\Shell\EDK_X64
 
-@set WIN_BIN_DIR=%EFI_DUET%\Win_Bin
+@set WIN_BIN_DIR=%EFI_DUET%\Windows_Binaries
 @set BOOTSECTOR_BIN_DIR=%EFI_DUET%\BootSector
 @set EFILDR_DIR=%EFI_DUET%\Efildr\%DUET_BUILD%
-@set Extras_DIR=%EFI_DUET%\Extras\%PROCESSOR%
+@set EXTRAS_DIR=%EFI_DUET%\Extras\%PROCESSOR%
 @echo on
 
 @if "%1"=="" goto Help
@@ -70,7 +70,7 @@ set PROCESSOR=X64
 
 :Files
 @mkdir %EFI_BOOT_DISK%\efi\extras
-@copy %Extras_DIR%\*.efi %EFI_BOOT_DISK%\efi\extras\
+@copy %EXTRAS_DIR%\*.efi %EFI_BOOT_DISK%\efi\extras\
 @echo -------- 
 @echo Files have been copied to the USB flash drive successfully
 @echo Tianocore UEFI DUET FAT32 %DUET_BUILD% Build Done!
