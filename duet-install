@@ -14,13 +14,18 @@
 # disk that, when booted, makes a BIOS-based computer act like
 # one with a Unified Extensible Firmware Interface (UEFI).
 #
-# Version 0.1.1 - code cleanup, 6/??/2011
+# Version 0.1.2 - added code to detect where script is, 6/14/2011
+# Version 0.1.1 - code cleanup, 6/12/2011
 # Version 0.1.0 - initial release, 6/11/2011
 
 minFat32Size=66586
 
-bootDuetPath=~/bootduet/bootduet
-uefiDuetPath=~/bootduet/skodabenz-EFI_DUET-31cfe17
+thisScript=$(readlink -f $0)
+uefiDuetPath=`dirname $thisScript`
+if [[ ! -e $uefiDuetPath/copy_duet_files.sh ]] ; then
+   uefiDuetPath=~/bootduet/skodabenz-EFI_DUET
+fi
+bootDuetPath=$uefiDuetPath/BootSector
 syslinuxPath=/usr/share/syslinux
 copyDuetScript=copy_duet_files.sh
 tempMountPoint=/tmp/installduet
@@ -271,6 +276,13 @@ FindStuff() {
       fi # GPT/MBR choice
    fi # installing SYSLINUX
 
+   # Verify presence of UEFI DUET directory's copy_duet_files.sh file;
+   # assume everything else is present if that is....
+   if [[ ! -e $uefiDuetPath/$copyDuetScript ]] ; then
+      echo "UEFI installation script not found! Aborting!"
+      exit 1
+   fi
+
    # Verify presence of BootDuet files...
    if [[ $lbaMode == "32" ]] ; then
       if [[ ! ( -e $bootDuetPath/bd32.bin && -e $bootDuetPath/bd16.bin && -e $bootDuetPath/bd12.bin ) ]] ; then
@@ -283,13 +295,6 @@ FindStuff() {
          exit 1
       fi
    fi # BootDuet file verification
-
-   # Verify presence of UEFI DUET directory's copy_duet_files.sh file;
-   # assume everything else is present if that is....
-   if [[ ! -e $uefiDuetPath/$copyDuetScript ]] ; then
-      echo "UEFI installation script not found! Aborting!"
-      exit 1
-   fi
 
    # Abort if necessary programs aren't installed....
    if [[ $mkfsTarget == "1" ]] ; then
