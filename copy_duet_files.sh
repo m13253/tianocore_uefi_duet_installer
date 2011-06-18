@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 WD="${PWD}/"
 UEFI_DUET_DIR="${WD}/"
