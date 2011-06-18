@@ -11,5 +11,5 @@ The Shell binary included is the Shell of UDK/EDK2's ShellBinPkg (Beta Shell), n
 
 To setup the DUET USB flash drive in Windows, you will also need to download "HP USB Disk Storage Format Utility" from this link http://www.4shared.com/file/143511399/975c2e6/HP_USB_Disk_Storage_Format_Utility.html . This utility partitions the USB flash device as MBR, as required by DUET. Formatting the USB flash drive directly using Windows will lead to a non-partitioned USB "superfloppy" which will not boot DUET.
 To launch EFI/UEFI Shell, go to (after booting DUET USB) :-
-Boot Maintenance Manager -> Boot from file -> EFI_DUET -> efi -> Shell -> Shell.efiCheck whether DUET (especially UDK_X64) works in your system. It is known to work properly only in Intel Processor+Chipset combination systems. I would like to get feedback from users of AMD processor and/or NVIDIA chipset systems.
+Boot Maintenance Manager -> Boot from file -> UEFI_DUET -> efi -> Shell -> Shell.efiCheck whether DUET (especially UDK_X64) works in your system. It is known to work properly only in Intel Processor+Chipset combination systems. I would like to get feedback from users of AMD processor and/or NVIDIA chipset systems.
 For any queries reply in this forum link - http://www.insanelymac.com/forum/index.php?showtopic=186440 or send a mail to (skodabenz) aatt (rocketmail) ddoott (com) .

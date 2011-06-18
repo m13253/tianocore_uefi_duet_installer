@@ -1,18 +1,18 @@
-@set EFI_DUET=%CD%
+@set UEFI_DUET=%CD%
 
 @set DUET_BUILD=%2
 @set EFI_BOOT_DISK=%1
-@set DISK_LABEL=EFI_DUET
+@set DISK_LABEL=UEFI_DUET
 
 set PROCESSOR=X64
 
-@if "%2"=="UDK_X64" set SHELL_DIR=%EFI_DUET%\Shell\UDK_X64
-@if "%2"=="EDK_UEFI64" set SHELL_DIR=%EFI_DUET%\Shell\EDK_X64
+@if "%2"=="UDK_X64" set SHELL_DIR=%UEFI_DUET%\Shell\UDK_X64
+@if "%2"=="EDK_UEFI64" set SHELL_DIR=%UEFI_DUET%\Shell\EDK_X64
 
-@set WIN_BIN_DIR=%EFI_DUET%\Windows_Binaries
-@set BOOTSECTOR_BIN_DIR=%EFI_DUET%\BootSector
-@set EFILDR_DIR=%EFI_DUET%\Efildr\%DUET_BUILD%
-@set EXTRAS_DIR=%EFI_DUET%\Extras\%PROCESSOR%
+@set WIN_BIN_DIR=%UEFI_DUET%\Windows_Binaries
+@set BOOTSECTOR_BIN_DIR=%UEFI_DUET%\BootSector
+@set EFILDR_DIR=%UEFI_DUET%\Efildr\%DUET_BUILD%
+@set EXTRAS_DIR=%UEFI_DUET%\Extras\%PROCESSOR%
 @echo on
 
 @if "%1"=="" goto Help

@@ -205,7 +205,7 @@ EFILDR16 and the FAT32 version expects EFILDR20. This is for similarity with
 Intel's original boot sector code of DUET.
 
 You can find a compiled version of that file on
-https://github.com/skodabenz/EFI_DUET. Note that you can just rename EfiLdr20
+https://github.com/skodabenz/UEFI_DUET. Note that you can just rename EfiLdr20
 to EFILDR, EFILDR16 or EFILDR20. The same program recognizes the three types
 of FAT file systems.
 

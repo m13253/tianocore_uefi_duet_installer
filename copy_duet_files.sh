@@ -1,7 +1,7 @@
 #!/bin/sh
 
 WD="${PWD}/"
-EFI_DUET_DIR="${WD}/"
+UEFI_DUET_DIR="${WD}/"
 
 PROCESS_CONTINUE="TRUE"
 
@@ -21,7 +21,7 @@ then
 	echo "--------"
 	echo "${0} [PARTITION_MOUNTPOINT] [DUET_BUILD]"
 	echo "--------"
-	echo "Example : ${0} /media/EFI_DUET UDK_X64"
+	echo "Example : ${0} /media/UEFI_DUET UDK_X64"
 	echo "--------"
 	echo "The possible arguments for DUET_BUILD are UDK_X64 and EDK_UEFI64 (in CAPS)."
 	echo "--------"
@@ -46,23 +46,23 @@ then
 	fi
 fi
 
-EFI_DUET_MP="${1}"
+UEFI_DUET_MP="${1}"
 DUET_BUILD="${2}"
 
 PROCESSOR="X64"
 
-[ "${DUET_BUILD}" = "UDK_X64" ] && SHELL_DIR="${EFI_DUET_DIR}/Shell/UDK_X64/"
+[ "${DUET_BUILD}" = "UDK_X64" ] && SHELL_DIR="${UEFI_DUET_DIR}/Shell/UDK_X64/"
 
-[ "${DUET_BUILD}" = "EDK_UEFI64" ] && SHELL_DIR="${EFI_DUET_DIR}/Shell/EDK_X64/"
+[ "${DUET_BUILD}" = "EDK_UEFI64" ] && SHELL_DIR="${UEFI_DUET_DIR}/Shell/EDK_X64/"
 
-EFILDR_DIR="${EFI_DUET_DIR}/Efildr/${DUET_BUILD}/"
-EXTRAS_DIR="${EFI_DUET_DIR}/Extras/${PROCESSOR}/"
+EFILDR_DIR="${UEFI_DUET_DIR}/Efildr/${DUET_BUILD}/"
+EXTRAS_DIR="${UEFI_DUET_DIR}/Extras/${PROCESSOR}/"
 
 if [ "${PROCESS_CONTINUE}" = TRUE ]
 then
 	echo
 	echo "--------"
-	echo "PARTITION MOUNTPOINT = ${EFI_DUET_MP}"
+	echo "PARTITION MOUNTPOINT = ${UEFI_DUET_MP}"
 	echo
 	echo "PARTITION FILESYSTEM = FAT32"
 	echo
@@ -72,17 +72,17 @@ then
 	
 	set -x -e
 	
-	cp --verbose "${EFILDR_DIR}/Efildr20" "${EFI_DUET_MP}/EFILDR20"
-	# cp --verbose "${EFILDR_DIR}"/*.fv "${EFI_DUET_MP}/"
+	cp --verbose "${EFILDR_DIR}/Efildr20" "${UEFI_DUET_MP}/EFILDR20"
+	# cp --verbose "${EFILDR_DIR}"/*.fv "${UEFI_DUET_MP}/"
 	
-	cp --verbose "${SHELL_DIR}/LoadFv.efi" "${EFI_DUET_MP}/LoadFv.efi" || true
-	cp --verbose "${SHELL_DIR}/DumpBs.efi" "${EFI_DUET_MP}/DumpBs.efi" || true
+	cp --verbose "${SHELL_DIR}/LoadFv.efi" "${UEFI_DUET_MP}/LoadFv.efi" || true
+	cp --verbose "${SHELL_DIR}/DumpBs.efi" "${UEFI_DUET_MP}/DumpBs.efi" || true
 	
-	mkdir -p "${EFI_DUET_MP}/efi/Shell"
-	cp --verbose "${SHELL_DIR}/Shell_Full.efi" "${EFI_DUET_MP}/efi/Shell/Shell.efi"
+	mkdir -p "${UEFI_DUET_MP}/efi/Shell"
+	cp --verbose "${SHELL_DIR}/Shell_Full.efi" "${UEFI_DUET_MP}/efi/Shell/Shell.efi"
 	
-	mkdir -p "${EFI_DUET_MP}/efi/extras"
-	cp --verbose "${EXTRAS_DIR}"/*.efi "${EFI_DUET_MP}/efi/extras/" || true
+	mkdir -p "${UEFI_DUET_MP}/efi/extras"
+	cp --verbose "${EXTRAS_DIR}"/*.efi "${UEFI_DUET_MP}/efi/extras/" || true
 	
 	set +x +e
 	
@@ -93,8 +93,8 @@ then
 fi
 
 unset WD
-unset EFI_DUET_DIR
-unset EFI_DUET_MP
+unset UEFI_DUET_DIR
+unset UEFI_DUET_MP
 unset DUET_BUILD
 unset PROCESSOR
 unset SHELL_DIR

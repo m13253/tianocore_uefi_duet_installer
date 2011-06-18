@@ -14,7 +14,7 @@ Setting up DUET USB flash drive in Windows :-
 
 6) Open Windows Command Prompt with "Run as Administator" option (ie. Run "cmd" as Administrator).
 
-7) cd to the EFI_DUET folder.  Eg:- "cd C:\EFI_DUET && C:" (without quotes). Enter.
+7) cd to the UEFI_DUET folder.  Eg:- "cd C:\UEFI_DUET && C:" (without quotes). Enter.
 
 8) Note down the drive letter of the USB flash drive.
 
