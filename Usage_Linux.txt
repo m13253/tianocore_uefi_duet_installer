@@ -1,6 +1,7 @@
 Setting up DUET USB flash drive in Linux :-
 
-NOTE : All the commands in Linux (and other Unix systems) are Case-Sensitive. This is true for any command typed in the terminal.
+NOTE : All the commands in Linux (and other Unix systems) are Case-Sensitive. This is true for any command typed in the terminal.
+
 1) Plug in your USB flash drive and unplug any other USB flash drive and/or any USB external Harddrives. Only the USB flash drive to be setup, should be connected to the computer and rest of the USB ports should be free.
 
 2) Note down the device file name of your USB device. Let it be 'DEVICE' (for example /dev/sdc).
@@ -30,11 +31,14 @@ NOTE : All the commands in Linux (and other Unix systems) are Case-Sensitive. Th
 	
 
 Safely Remove and Replug the USB flash drive. This step is important before running Step 2. Do not close the terminal Window.
-
+
+
 8) For step2 type "./copy_duet_files.sh [PARTITION_MOUNTPOINT] [DUET_BUILD]" (without quotes). 
 
-   Example :- "./copy_duet_files.sh /media/UEFI_DUET UDK_X64" (without quotes).
-   The possible arguments for DUET_BUILD are UDK_X64 or EDK_UEFI64 (should be in CAPS).
+   Example :- "./copy_duet_files.sh /media/UEFI_DUET UDK_X64" (without quotes).
+
+   The possible arguments for DUET_BUILD are UDK_X64 or EDK_UEFI64 (should be in CAPS).
+
 9) Safely Remove the USB flash drive and restart the system.
 
 10) Plug in the USB flash drive when the system reboots and set "Boot from USB" as the first option in your system's BIOS Boot order option.
