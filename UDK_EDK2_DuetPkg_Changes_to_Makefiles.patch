@@ -331,19 +331,6 @@ index d215116..3d39181 100755
 +$WORKSPACE/DuetPkg/CreateBootDisk.sh file $FLOPPY_IMAGE /dev/null FAT12 $PROCESSOR $TARGET_TOOLS $BUILDTARGET
  exit $?
  
-diff --git a/MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMass.h b/MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMass.h
-index d3c4476..48d34ab 100644
---- a/MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMass.h
-+++ b/MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMass.h
-@@ -38,7 +38,7 @@ typedef struct _USB_MASS_DEVICE    USB_MASS_DEVICE;
- #include "UsbMassBot.h"
- #include "UsbMassCbi.h"
- #include "UsbMassBoot.h"
--#include "UsbMassDiskInfo.h"
-+#include "UsbMassDiskinfo.h"
- #include "UsbMassImpl.h"
- 
- #define USB_IS_IN_ENDPOINT(EndPointAddr)      (((EndPointAddr) & BIT7) == BIT7)
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
 index d6e070a..de32d73 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
