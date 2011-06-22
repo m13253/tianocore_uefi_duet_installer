@@ -36,7 +36,7 @@ The Shell binary included is the Shell of UDK/EDK2's ShellBinPkg (Beta Shell), n
 To setup the DUET USB flash drive in Windows, you will also need to download "HP USB Disk Storage Format Utility" from this link http://www.4shared.com/file/143511399/975c2e6/HP_USB_Disk_Storage_Format_Utility.html . This utility partitions the USB flash device as MBR, as required by DUET. Formatting the USB flash drive directly using Windows will lead to a non-partitioned USB "superfloppy" which will not boot DUET.
 
 
-To launch EFI/UEFI Shell, go to (after booting DUET USB) :-
+To launch UEFI Shell, go to (after booting DUET USB) :-
 
 Boot Maintenance Manager -> Boot from file -> UEFI_DUET -> efi -> Shell -> Shell.efi
 
