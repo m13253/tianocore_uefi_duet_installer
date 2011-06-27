@@ -8,19 +8,6 @@ index 0000000..56eefb8
 +FatPkg/
 +VBoxPkg
 +Build*/
-diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
-index 495f55d..78ef920 100644
---- a/BaseTools/Conf/tools_def.template
-+++ b/BaseTools/Conf/tools_def.template
-@@ -2103,7 +2103,7 @@ DEFINE GCC45_ASM_FLAGS               = DEF(GCC44_ASM_FLAGS)
- *_ELFGCC_X64_VFRPP_PATH            = DEF(ELFGCC_BIN)/gcc
- *_ELFGCC_X64_RC_PATH               = DEF(ELFGCC_BIN)/objcopy
- 
--*_ELFGCC_X64_CC_FLAGS              = -Os -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-missing-braces -Wno-address -Wno-array-bounds -c -include AutoGen.h -D_EFI_P64
-+*_ELFGCC_X64_CC_FLAGS              = -fPIC -Os -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-missing-braces -Wno-address -Wno-array-bounds -c -include AutoGen.h -D_EFI_P64
- *_ELFGCC_X64_DLINK_FLAGS           = -nostdlib --shared --entry $(IMAGE_ENTRY_POINT) -u $(IMAGE_ENTRY_POINT)
- *_ELFGCC_X64_SLINK_FLAGS           =
- *_ELFGCC_X64_ASM_FLAGS             = -c -x assembler -imacros $(DEST_DIR_DEBUG)/AutoGen.h
 diff --git a/DuetPkg/CreateBootDisk.sh b/DuetPkg/CreateBootDisk.sh
 index 8d8543f..8fae7ca 100755
 --- a/DuetPkg/CreateBootDisk.sh
@@ -373,15 +360,3 @@ index 7ae95cd..54f00f9 100644
  
  FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
    SECTION RAW = MdeModulePkg/Logo/Logo.bmp
-diff --git a/UnixPkg/UnixPkgX64.fdf b/UnixPkg/UnixPkgX64.fdf
-index 6ac1cdc..fa22a5e 100644
---- a/UnixPkg/UnixPkgX64.fdf
-+++ b/UnixPkg/UnixPkgX64.fdf
-@@ -245,7 +245,6 @@ INF  MdeModulePkg/Universal/Network/VlanConfigDxe/VlanConfigDxe.inf
- INF  MdeModulePkg/Universal/Network/Mtftp4Dxe/Mtftp4Dxe.inf
- INF  MdeModulePkg/Universal/Network/Tcp4Dxe/Tcp4Dxe.inf
- INF  MdeModulePkg/Universal/Network/Udp4Dxe/Udp4Dxe.inf
--
-  
- !if $(COMPILE_BINS)
- INF FatPkg/EnhancedFatDxe/Fat.inf
