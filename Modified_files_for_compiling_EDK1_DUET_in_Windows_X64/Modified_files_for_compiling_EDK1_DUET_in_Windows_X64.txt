@@ -1,0 +1,27 @@
+These modified files are for compiling EDK1's DUET in Windows Vista or 7 x64 without any MASM installed. 
+The default compiler has been set to be "Visual Studio 2008" installed in "Program Files (x86)" folder. 
+The location of WinDDK remains unchanged.
+
+Actual Stuff changed :-
+
+In file <EDK_SVN_TRUNK>\Sample\LocalTools.env
+
+VC8_X64_PATH = C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\bin\x86_amd64
+
+In file <EDK_SVN_TRUNK>\Sample\Platform\DUET\Build\Config.env 
+
+USE_VC8 = YES 
+USE_VC8_X64 = YES
+
+In file <EDK_SVN_TRUNK>\Sample\Platform\DUET\Loader\EfiLdr\Ia32\Makefile
+
+(many lines changed)
+
+In file <EDK_SVN_TRUNK>\Sample\Platform\DUET\Loader\EfiLdr\X64\Makefile
+
+(many lines changed)
+
+
+Copy the Sample_Platform_DUET_Loader_BootSector_bin folder to <EDK_SVN_TRUNK>\Sample\Platform\DUET\Loader\BootSector\ and rename the folder from "Sample_Platform_DUET_Loader_BootSector_bin" to "bin" .
+
+The "_" part of the filename of each file should be replaced by "\" to get the path where that corresponding file should be copied.

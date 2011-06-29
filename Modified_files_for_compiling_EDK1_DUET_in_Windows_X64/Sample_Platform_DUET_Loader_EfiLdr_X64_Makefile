@@ -1,0 +1,112 @@
+#/*++
+#
+#  Copyright (c) 2006 - 2007, Intel Corporation                                                         
+#  All rights reserved. This program and the accompanying materials                          
+#  are licensed and made available under the terms and conditions of the BSD License         
+#  which accompanies this distribution.  The full text of the license may be found at        
+#  http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                            
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+#  
+#  Module Name:  
+#    Makefile
+#  
+#  Abstract:
+#   
+#--*/
+
+#
+# Globals
+#
+BIN_DIR     = $(BUILD_DIR)\$(PROCESSOR)
+BOOTSECTOR_BIN_DIR = $(EDK_SOURCE)\Sample\Platform\DUET\Loader\BootSector\bin
+TOOLCHAIN   = TOOLCHAIN_$(PROCESSOR)
+
+TOOLBIN_DIR = $(BUILD_DIR)\Tools
+
+#
+# Include CommonTools.env enviroment
+#
+
+!INCLUDE $(BUILD_DIR)\PlatformTools.env
+
+#
+# Include paths
+#
+INC = -I $(SOURCE_DIR)\. -I $(SOURCE_DIR)\.\$(PROCESSOR) $(INC)
+INC = -I $(EDK_SOURCE)\Foundation\ \
+      -I $(EDK_SOURCE)\Foundation\Include \
+      -I $(EDK_SOURCE)\Foundation\Include\$(PROCESSOR) \
+      -I $(EDK_SOURCE)\Foundation\Efi \
+      -I $(EDK_SOURCE)\Foundation\Efi\Include \
+      -I $(EDK_SOURCE)\Foundation\Framework \
+      -I $(EDK_SOURCE)\Foundation\Framework\Include \
+      -I $(EDK_SOURCE)\Foundation\Library\Dxe\Include \
+      -I $(EDK_SOURCE)\Foundation\Library\Pei\Include \
+      -I $(EDK_SOURCE)\Foundation\Include\Pei \
+      $(INC)
+
+LDRDEP = $(BUILD_DIR)\..\Loader\EfiLdr\Efildr.c \
+         $(BUILD_DIR)\..\Loader\EfiLdr\EfiLdrHandoff.h \
+         $(BUILD_DIR)\..\Loader\EfiLdr\EfiLoader.c \
+         $(BUILD_DIR)\..\Loader\EfiLdr\Debug.c \
+         $(BUILD_DIR)\..\Loader\EfiLdr\Debug.h \
+         $(BUILD_DIR)\..\Loader\EfiLdr\PeLoader.c \
+         $(BUILD_DIR)\..\Loader\EfiLdr\PeLoader.h \
+         $(BUILD_DIR)\..\Loader\EfiLdr\Support.c \
+         $(BUILD_DIR)\..\Loader\EfiLdr\Support.h
+
+all : \
+  $(BIN_DIR)\Efildr.efi     \
+
+
+loader :      \
+  Fv\Efildr   \
+  Fv\Efildr16 \
+  Fv\Efildr20 \
+
+
+#
+# Generate loader object
+#
+$(BIN_DIR)\Efildr.obj: $(LDRDEP)
+  $(CC) $(C_FLAGS) $(BUILD_DIR)\..\Loader\EfiLdr\Efildr.c
+
+$(BIN_DIR)\Efildr.dll: $(BIN_DIR)\Efildr.obj
+  $(LINK) /nologo /MACHINE:AMD64 /SUBSYSTEM:CONSOLE /NODEFAULTLIB /INCREMENTAL:NO \
+          /MAP /FIXED /BASE:0x00010000 /OPT:REF /ALIGN:32 /MERGE:.data=.text \
+          /MERGE:.rdata=.text /DRIVER /ENTRY:EfiLoader $(BIN_DIR)\Efildr.obj \
+          $(BIN_DIR)\CompilerStub.lib $(BIN_DIR)\EfiCommonLib.lib $(BIN_DIR)\PeiLib.lib \
+          /OUT:$(BIN_DIR)\Efildr.dll /IGNORE:4078,4096
+
+$(BIN_DIR)\Efildr.efi: $(BIN_DIR)\Efildr.dll
+  $(TOOLBIN_DIR)\FwImage app $(BIN_DIR)\Efildr.dll $(BIN_DIR)\Efildr.efi
+
+#
+# Generate loader binary
+#
+Fv\EfiMain.z : Fv\EfiMain.fv
+  $(TOOLBIN_DIR)\Eficompress -tTiano Fv\EfiMain.fv Fv\EfiMain.z
+ 
+Fv\DxeMain.z : $(BIN_DIR)\DxeMain.efi
+  $(TOOLBIN_DIR)\Eficompress -tTiano $(BIN_DIR)\DxeMain.efi Fv\DxeMain.z
+ 
+Fv\DxeIpl.z : $(BIN_DIR)\DxeIpl.efi
+  $(TOOLBIN_DIR)\Eficompress -tTiano $(BIN_DIR)\DxeIpl.efi Fv\DxeIpl.z
+
+Fv\Efildr64: $(BIN_DIR)\Efildr.efi Fv\DxeIpl.z Fv\DxeMain.z Fv\EfiMain.z
+  $(TOOLBIN_DIR)\Efildrimage Fv\Efildr64 $(BIN_DIR)\Efildr.efi Fv\DxeIpl.z Fv\DxeMain.z Fv\EfiMain.z
+
+Fv\Efildr: Fv\Efildr64
+  copy /b $(BOOTSECTOR_BIN_DIR)\Start64.com+$(BOOTSECTOR_BIN_DIR)\Efi64.com2+Fv\Efildr64 Fv\EfildrPure
+  $(TOOLBIN_DIR)\GenPage Fv\EfildrPure Fv\Efildr
+
+Fv\Efildr16: Fv\Efildr64
+  copy /b $(BOOTSECTOR_BIN_DIR)\St16_64.com+$(BOOTSECTOR_BIN_DIR)\Efi64.com2+Fv\Efildr64 Fv\Efildr16Pure
+  $(TOOLBIN_DIR)\GenPage Fv\Efildr16Pure Fv\Efildr16
+
+Fv\Efildr20: Fv\Efildr64
+  copy /b $(BOOTSECTOR_BIN_DIR)\St32_64.com+$(BOOTSECTOR_BIN_DIR)\Efi64.com2+Fv\Efildr64 Fv\Efildr20Pure
+  $(TOOLBIN_DIR)\GenPage Fv\Efildr20Pure Fv\Efildr20
+
