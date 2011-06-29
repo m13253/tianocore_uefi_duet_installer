@@ -289,6 +289,14 @@ index d215116..3d39181 100755
 +$WORKSPACE/DuetPkg/CreateBootDisk.sh file $FLOPPY_IMAGE /dev/null FAT12 $PROCESSOR $TARGET_TOOLS $BUILDTARGET
  exit $?
  
+diff --git a/FatPkg b/FatPkg
+new file mode 120000
+index 0000000..4b0b904
+--- /dev/null
++++ b/FatPkg
+@@ -0,0 +1 @@
++../FatPkg__GIT_SVN
+\ No newline at end of file
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
 index 15dc417..f1a2ced 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
@@ -321,3 +329,11 @@ index f0388b1..695e66b 100644
  INF  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
  INF  MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
  INF  MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+diff --git a/VBoxPkg b/VBoxPkg
+new file mode 120000
+index 0000000..dcbf574
+--- /dev/null
++++ b/VBoxPkg
+@@ -0,0 +1 @@
++../../VBoxPkg__GIT_SVN
+\ No newline at end of file
