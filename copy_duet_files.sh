@@ -1,9 +1,11 @@
 #!/bin/bash
 
-WD="${PWD}/"
-UEFI_DUET_DIR="${WD}/"
+_WD="${PWD}/"
+_UEFI_DUET_DIR="${_WD}/"
 
-PROCESS_CONTINUE="TRUE"
+_SCRIPTNAME="$(basename "${0}")"
+
+_PROCESS_CONTINUE='TRUE'
 
 if [ \
 	"${1}" = "" -o \
@@ -19,20 +21,20 @@ if [ \
 then
 	echo
 	echo "--------"
-	echo "${0} [PARTITION_MOUNTPOINT] [DUET_BUILD]"
+	echo "${_SCRIPTNAME} [PARTITION_MOUNTPOINT] [UEFI_DUET_BUILD]"
 	echo "--------"
-	echo "Example : ${0} /media/UEFI_DUET UDK_X64"
+	echo "Example : ${_SCRIPTNAME} /media/UEFI_DUET UDK_X64"
 	echo "--------"
-	echo "The possible arguments for DUET_BUILD are UDK_X64 and EDK_UEFI64 (in CAPS)."
+	echo "The possible arguments for UEFI_DUET_BUILD are UDK_X64 and EDK_UEFI64 (in CAPS)."
 	echo "--------"
 	echo "You must run this script as root."
 	echo "--------"
 	echo
-	PROCESS_CONTINUE=FALSE
+	_PROCESS_CONTINUE='FALSE'
 fi
 
 
-if [ "${PROCESS_CONTINUE}" = "TRUE" ]
+if [ "${_PROCESS_CONTINUE}" == 'TRUE' ]
 then
 	### check for root
 	if ! [ ${UID} -eq 0 ]; then 
@@ -40,64 +42,65 @@ then
 		exit 1
 	fi
 	
-	if [ "${2}" = "" ]
+	if [ "${2}" == '' ]
 	then
-		echo "DUET_BUILD not defined"
+		echo "_UEFI_DUET_BUILD not defined"
+		exit 1
 	fi
 fi
 
-UEFI_DUET_MP="${1}"
-DUET_BUILD="${2}"
+_UEFI_DUET_MP="${1}"
+_UEFI_DUET_BUILD="${2}"
 
-PROCESSOR="X64"
+_UEFI_PROCESSOR_ARCH="X64"
 
-[ "${DUET_BUILD}" = "UDK_X64" ] && SHELL_DIR="${UEFI_DUET_DIR}/Shell/UDK_X64/"
+[ "${_UEFI_DUET_BUILD}" = "UDK_X64" ] && _UEFI_SHELL_DIR="${_UEFI_DUET_DIR}/Shell/UDK_X64/"
 
-[ "${DUET_BUILD}" = "EDK_UEFI64" ] && SHELL_DIR="${UEFI_DUET_DIR}/Shell/EDK_X64/"
+[ "${_UEFI_DUET_BUILD}" = "EDK_UEFI64" ] && _UEFI_SHELL_DIR="${_UEFI_DUET_DIR}/Shell/EDK_X64/"
 
-EFILDR_DIR="${UEFI_DUET_DIR}/Efildr/${DUET_BUILD}/"
-EXTRAS_DIR="${UEFI_DUET_DIR}/Extras/${PROCESSOR}/"
+_UEFI_DUET_EFILDR_DIR="${_UEFI_DUET_DIR}/Efildr/${_UEFI_DUET_BUILD}/"
+_UEFI_DUET_EXTRAS_DIR="${_UEFI_DUET_DIR}/Extras/${_UEFI_PROCESSOR_ARCH}/"
 
-if [ "${PROCESS_CONTINUE}" = TRUE ]
+if [ "${_PROCESS_CONTINUE}" == 'TRUE' ]
 then
 	echo
 	echo "--------"
-	echo "PARTITION MOUNTPOINT = ${UEFI_DUET_MP}"
+	echo "PARTITION MOUNTPOINT = ${_UEFI_DUET_MP}"
 	echo
 	echo "PARTITION FILESYSTEM = FAT32"
 	echo
-	echo "UEFI-DUET FIRMWARE BUILD = ${DUET_BUILD}"
+	echo "UEFI-DUET FIRMWARE BUILD = ${_UEFI_DUET_BUILD}"
 	echo "--------"
 	echo
 	
 	set -x -e
 	
-	cp --verbose "${EFILDR_DIR}/Efildr20" "${UEFI_DUET_MP}/EFILDR20"
-	# cp --verbose "${EFILDR_DIR}"/*.fv "${UEFI_DUET_MP}/"
+	cp --verbose "${_UEFI_DUET_EFILDR_DIR}/Efildr20" "${_UEFI_DUET_MP}/EFILDR20"
+	# cp --verbose "${_UEFI_DUET_EFILDR_DIR}"/*.fv "${_UEFI_DUET_MP}/"
 	
-	cp --verbose "${SHELL_DIR}/LoadFv.efi" "${UEFI_DUET_MP}/LoadFv.efi" || true
-	cp --verbose "${SHELL_DIR}/DumpBs.efi" "${UEFI_DUET_MP}/DumpBs.efi" || true
+	cp --verbose "${_UEFI_SHELL_DIR}/LoadFv.efi" "${_UEFI_DUET_MP}/LoadFv.efi" || true
+	cp --verbose "${_UEFI_SHELL_DIR}/DumpBs.efi" "${_UEFI_DUET_MP}/DumpBs.efi" || true
 	
-	mkdir -p "${UEFI_DUET_MP}/efi/Shell"
-	cp --verbose "${SHELL_DIR}/Shell_Full.efi" "${UEFI_DUET_MP}/efi/Shell/Shell.efi"
+	mkdir -p "${_UEFI_DUET_MP}/efi/Shell"
+	cp --verbose "${_UEFI_SHELL_DIR}/Shell_Full.efi" "${_UEFI_DUET_MP}/efi/Shell/Shell.efi"
 	
-	mkdir -p "${UEFI_DUET_MP}/efi/extras"
-	cp --verbose "${EXTRAS_DIR}"/*.efi "${UEFI_DUET_MP}/efi/extras/" || true
+	mkdir -p "${_UEFI_DUET_MP}/efi/extras"
+	cp --verbose "${_UEFI_DUET_EXTRAS_DIR}"/*.efi "${_UEFI_DUET_MP}/efi/extras/" || true
 	
 	set +x +e
 	
 	echo "--------"
-	echo "DUET ${DUET_BUILD} files have been copied to the FAT32 PARTITION successfully"
+	echo "DUET ${_UEFI_DUET_BUILD} files have been copied to the FAT32 PARTITION successfully"
 	echo "--------"
 	
 fi
 
-unset WD
-unset UEFI_DUET_DIR
-unset UEFI_DUET_MP
-unset DUET_BUILD
-unset PROCESSOR
-unset SHELL_DIR
-unset EFILDR_DIR
-unset EXTRAS_DIR
-unset PROCESS_CONTINUE
+unset _WD
+unset _UEFI_DUET_DIR
+unset _UEFI_DUET_MP
+unset _UEFI_DUET_BUILD
+unset _UEFI_PROCESSOR_ARCH
+unset _UEFI_SHELL_DIR
+unset _UEFI_DUET_EFILDR_DIR
+unset _UEFI_DUET_EXTRAS_DIR
+unset _PROCESS_CONTINUE
