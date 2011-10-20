@@ -43,4 +43,4 @@ Boot Maintenance Manager -> Boot from file -> UEFI_DUET -> efi -> Shell -> Shell
 
 Check whether DUET (especially UDK_X64) works in your system. It is known to work properly only in Intel Processor+Chipset combination systems. I would like to get feedback from users of AMD processor and/or NVIDIA chipset systems.
 
-For any queries reply in this forum link - http://www.insanelymac.com/forum/index.php?showtopic=186440 or send a mail to skodabenz aatt rocketmail ddoott com.
+For any queries reply in this forum link - http://www.insanelymac.com/forum/index.php?showtopic=186440 or send a mail to the.ridikulus.rat aattee gemmmaiel ddoooottii coome.
