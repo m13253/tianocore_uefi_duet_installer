@@ -24,10 +24,10 @@ index 8d8543f..8fae7ca 100755
  
  export EFI_BOOT_MEDIA=$2
 diff --git a/DuetPkg/DuetPkg.fdf b/DuetPkg/DuetPkg.fdf
-index f6bcdd9..168765f 100644
+index f6bcdd9..0d96342 100644
 --- a/DuetPkg/DuetPkg.fdf
 +++ b/DuetPkg/DuetPkg.fdf
-@@ -51,7 +51,8 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
+@@ -51,10 +51,11 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
  INF  MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
  INF  MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
@@ -36,7 +36,11 @@ index f6bcdd9..168765f 100644
 +# INF  DuetPkg/FSVariable/FSVariable.inf
  INF  MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
  INF  MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
- INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
+-INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
++# INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
+ INF  MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
+ INF  MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
+ INF  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
 @@ -66,7 +67,7 @@ INF  MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
  INF  DuetPkg/SmbiosGenDxe/SmbiosGen.inf
  #INF  DuetPkg/FvbRuntimeService/DUETFwh.inf
@@ -51,8 +55,9 @@ index f6bcdd9..168765f 100644
  INF  DuetPkg/PciRootBridgeNoEnumerationDxe/PciRootBridgeNoEnumeration.inf
  INF  DuetPkg/PciBusNoEnumerationDxe/PciBusNoEnumeration.inf
 -INF  IntelFrameworkModulePkg/Bus/Pci/VgaMiniPortDxe/VgaMiniPortDxe.inf
+-INF  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
 +# INF  IntelFrameworkModulePkg/Bus/Pci/VgaMiniPortDxe/VgaMiniPortDxe.inf
- INF  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
++# INF  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
  
    # IDE/AHCI Support
  INF  DuetPkg/SataControllerDxe/SataControllerDxe.inf
@@ -190,7 +195,7 @@ index e0ddbd5..f2637e5 100644
  #include "FileIo.h"
  #include "FlashLayout.h"
 diff --git a/DuetPkg/PostBuild.sh b/DuetPkg/PostBuild.sh
-index c77c0f3..a465799 100755
+index c77c0f3..0179b3b 100755
 --- a/DuetPkg/PostBuild.sh
 +++ b/DuetPkg/PostBuild.sh
 @@ -34,7 +34,7 @@ if [ \
@@ -198,19 +203,22 @@ index c77c0f3..a465799 100755
  then
  	echo Error! Please specific the architecture. 
 -	echo Usage: "./PostBuild.sh [IA32|X64] [UNIXGCC|GCC44]"
-+	echo Usage: "./PostBuild.sh [IA32|X64] [UNIXGCC|GCC44|GCC45]"
++	echo Usage: "./PostBuild.sh [IA32|X64] [UNIXGCC|GCC44|GCC45|GCC46]"
  fi
  
  case "$1" in
-@@ -56,12 +56,27 @@ case "$2" in
+@@ -56,12 +56,30 @@ case "$2" in
     GCC44)
       export TOOLTAG=GCC44
       ;;
 +   GCC45)
 +     export TOOLTAG=GCC45
 +     ;;
++   GCC46)
++     export TOOLTAG=GCC46
++     ;;
 +   *)
-+     echo Invalid tool tag, should be only UNIXGCC or GCC44 or GCC45
++     echo Invalid tool tag, should be only UNIXGCC or GCC44 or GCC45 or GCC46
 +     return 1
 +esac
 +
@@ -232,7 +240,7 @@ index c77c0f3..a465799 100755
  
  
  #
-@@ -75,7 +90,7 @@ echo Compressing DxeMain.efi ...
+@@ -75,7 +93,7 @@ echo Compressing DxeMain.efi ...
  $BASETOOLS_DIR/LzmaCompress -e -o $BUILD_DIR/FV/DxeMain.z $BUILD_DIR/$PROCESSOR/DxeCore.efi
  
  echo Compressing DxeIpl.efi ...
@@ -242,7 +250,7 @@ index c77c0f3..a465799 100755
  echo Generate Loader Image ...
  
 diff --git a/DuetPkg/build64.sh b/DuetPkg/build64.sh
-index d215116..3d39181 100755
+index d215116..afee239 100755
 --- a/DuetPkg/build64.sh
 +++ b/DuetPkg/build64.sh
 @@ -38,6 +38,7 @@ else
@@ -258,7 +266,7 @@ index d215116..3d39181 100755
        ;;
    Linux*)
 -    TARGET_TOOLS=GCC44
-+    TARGET_TOOLS=GCC45
++    TARGET_TOOLS=GCC46
      ;;
  
  esac
@@ -307,10 +315,10 @@ index 0000000..4b0b904
 +../FatPkg__GIT_SVN
 \ No newline at end of file
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index 83c399c..eea8584 100644
+index d634a4d..2f2b57d 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -346,8 +346,9 @@
+@@ -349,8 +349,9 @@
    MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
@@ -323,7 +331,7 @@ index 83c399c..eea8584 100644
    MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index 2e3f60a..b16ffcb 100644
+index 52bdefd..f4c2bab 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
 @@ -181,8 +181,9 @@ INF  MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
