@@ -24,10 +24,10 @@ index 8d8543f..8fae7ca 100755
  
  export EFI_BOOT_MEDIA=$2
 diff --git a/DuetPkg/DuetPkg.fdf b/DuetPkg/DuetPkg.fdf
-index f6bcdd9..0d96342 100644
+index f6bcdd9..4e8f862 100644
 --- a/DuetPkg/DuetPkg.fdf
 +++ b/DuetPkg/DuetPkg.fdf
-@@ -51,10 +51,11 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
+@@ -51,7 +51,8 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
  INF  MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
  INF  MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
@@ -36,11 +36,7 @@ index f6bcdd9..0d96342 100644
 +# INF  DuetPkg/FSVariable/FSVariable.inf
  INF  MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
  INF  MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
--INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
-+# INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
- INF  MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
- INF  MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
- INF  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
+ INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
 @@ -66,7 +67,7 @@ INF  MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
  INF  DuetPkg/SmbiosGenDxe/SmbiosGen.inf
  #INF  DuetPkg/FvbRuntimeService/DUETFwh.inf
@@ -50,7 +46,7 @@ index f6bcdd9..0d96342 100644
  INF  MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
  INF  UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
  INF  UefiCpuPkg/CpuDxe/CpuDxe.inf
-@@ -78,29 +79,39 @@ INF  PcAtChipsetPkg/8254TimerDxe/8254Timer.inf
+@@ -78,29 +79,40 @@ INF  PcAtChipsetPkg/8254TimerDxe/8254Timer.inf
  INF  PcAtChipsetPkg/PcatRealTimeClockRuntimeDxe/PcatRealTimeClockRuntimeDxe.inf
  INF  DuetPkg/PciRootBridgeNoEnumerationDxe/PciRootBridgeNoEnumeration.inf
  INF  DuetPkg/PciBusNoEnumerationDxe/PciBusNoEnumeration.inf
@@ -79,6 +75,7 @@ index f6bcdd9..0d96342 100644
    # Usb Support
  INF  MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
  INF  MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
++# INF  MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
  INF  MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
  INF  MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
 +# INF  MdeModulePkg/Bus/Usb/UsbMouseDxe/UsbMouseDxe.inf
@@ -96,7 +93,7 @@ index f6bcdd9..0d96342 100644
  
  INF  MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
  INF  MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
-@@ -110,6 +121,10 @@ INF  DuetPkg/BiosVideoThunkDxe/BiosVideo.inf
+@@ -110,6 +122,10 @@ INF  DuetPkg/BiosVideoThunkDxe/BiosVideo.inf
    # Binary INF file to support toggle among different CPU architectures.
  INF  RuleOverride=BINARY FatBinPkg/EnhancedFatDxe/Fat.inf
  
@@ -107,7 +104,7 @@ index f6bcdd9..0d96342 100644
  FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
      SECTION RAW = MdeModulePkg/Logo/Logo.bmp
    }
-@@ -142,6 +157,12 @@ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
+@@ -142,6 +158,12 @@ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
          PE32     PE32                    $(INF_OUTPUT)/$(MODULE_NAME).efi
    }
  
@@ -121,7 +118,7 @@ index f6bcdd9..0d96342 100644
    FILE DRIVER = $(NAMED_GUID) {
      DXE_DEPEX    DXE_DEPEX Optional      |.depex
 diff --git a/DuetPkg/DuetPkgX64.dsc b/DuetPkg/DuetPkgX64.dsc
-index 59fec1a..a6b7cb2 100644
+index 59fec1a..2baa5db 100644
 --- a/DuetPkg/DuetPkgX64.dsc
 +++ b/DuetPkg/DuetPkgX64.dsc
 @@ -28,7 +28,7 @@
@@ -150,7 +147,7 @@ index 59fec1a..a6b7cb2 100644
    UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
    UefiCpuPkg/CpuDxe/CpuDxe.inf
    PcAtChipsetPkg/8259InterruptControllerDxe/8259.inf
-@@ -228,19 +229,29 @@
+@@ -228,19 +229,30 @@
    MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
  
@@ -165,6 +162,7 @@ index 59fec1a..a6b7cb2 100644
    # Usb Support
    MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
    MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
++  MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
    MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
    MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
 +  # MdeModulePkg/Bus/Usb/UsbMouseDxe/UsbMouseDxe.inf
