@@ -1,3 +1,70 @@
+diff --git a/BaseTools/BinWrappers/PosixLike/GenDepex b/BaseTools/BinWrappers/PosixLike/GenDepex
+index bd3141a..5dbaa9a 100755
+--- a/BaseTools/BinWrappers/PosixLike/GenDepex
++++ b/BaseTools/BinWrappers/PosixLike/GenDepex
+@@ -1,3 +1,3 @@
+ #!/usr/bin/env bash
+ PYTHONPATH="`dirname $0`/../../Source/Python" \
+-    python "`dirname $0`/../../Source/Python"/AutoGen/`basename $0`.py $*
++    python2 "`dirname $0`/../../Source/Python"/AutoGen/`basename $0`.py $*
+diff --git a/BaseTools/BinWrappers/PosixLike/RunBinToolFromBuildDir b/BaseTools/BinWrappers/PosixLike/RunBinToolFromBuildDir
+index 4821d24..db1313a 100755
+--- a/BaseTools/BinWrappers/PosixLike/RunBinToolFromBuildDir
++++ b/BaseTools/BinWrappers/PosixLike/RunBinToolFromBuildDir
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env bash
+-#python `dirname $0`/RunToolFromSource.py `basename $0` $*
++#python2 `dirname $0`/RunToolFromSource.py `basename $0` $*
+ #exec `dirname $0`/../../../../C/bin/`basename $0` $*
+ 
+ TOOL_BASENAME=`basename $0`
+diff --git a/BaseTools/BinWrappers/PosixLike/RunToolFromSource b/BaseTools/BinWrappers/PosixLike/RunToolFromSource
+index 2cb8b86..51caaa4 100755
+--- a/BaseTools/BinWrappers/PosixLike/RunToolFromSource
++++ b/BaseTools/BinWrappers/PosixLike/RunToolFromSource
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env bash
+-#python `dirname $0`/RunToolFromSource.py `basename $0` $*
++#python2 `dirname $0`/RunToolFromSource.py `basename $0` $*
+ PYTHONPATH="`dirname $0`/../../Source/Python" \
+-    python "`dirname $0`/../../Source/Python"/`basename $0`/`basename $0`.py $*
++    python2 "`dirname $0`/../../Source/Python"/`basename $0`/`basename $0`.py $*
+ 
+diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
+index 68caf86..a4a7d8f 100644
+--- a/BaseTools/Conf/tools_def.template
++++ b/BaseTools/Conf/tools_def.template
+@@ -1988,7 +1988,7 @@ NOOPT_DDK3790xASL_IPF_DLINK_FLAGS    = /NOLOGO /NODEFAULTLIB /LTCG /DLL /OPT:REF
+ DEBUG_*_*_OBJCOPY_ADDDEBUGFLAG     = --add-gnu-debuglink=$(DEBUG_DIR)\$(MODULE_NAME).debug
+ RELEASE_*_*_OBJCOPY_ADDDEBUGFLAG   =
+ 
+-DEFINE GCC_ALL_CC_FLAGS            = -g -Os -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-missing-braces -Wno-array-bounds -c -include AutoGen.h
++^DEFINE GCC_ALL_CC_FLAGS            = -Os -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-missing-braces -Wno-array-bounds -c -include AutoGen.h
+ DEFINE GCC_IA32_CC_FLAGS           = DEF(GCC_ALL_CC_FLAGS) -m32 -malign-double -freorder-blocks -freorder-blocks-and-partition -O2 -mno-stack-arg-probe
+ DEFINE GCC_X64_CC_FLAGS            = DEF(GCC_ALL_CC_FLAGS) -mno-red-zone -Wno-address -mno-stack-arg-probe
+ DEFINE GCC_IPF_CC_FLAGS            = DEF(GCC_ALL_CC_FLAGS) -minline-int-divide-min-latency
+@@ -2010,7 +2010,7 @@ DEFINE GCC_IA32_RC_FLAGS           = -I binary -O elf32-i386        -B i386 --re
+ DEFINE GCC_X64_RC_FLAGS            = -I binary -O elf64-x86-64      -B i386 --rename-section .data=.hii
+ DEFINE GCC_IPF_RC_FLAGS            = -I binary -O elf64-ia64-little -B ia64 --rename-section .data=.hii
+ 
+-DEFINE GCC44_ALL_CC_FLAGS            = -g -fshort-wchar -fno-stack-protector -fno-strict-aliasing -Wall -Werror -Wno-missing-braces -Wno-array-bounds -ffunction-sections -fdata-sections -c -include AutoGen.h -DSTRING_ARRAY_NAME=$(BASE_NAME)Strings
++^DEFINE GCC44_ALL_CC_FLAGS            = -Os -fshort-wchar -fno-stack-protector -fno-strict-aliasing -Wall -Werror -Wno-missing-braces -Wno-array-bounds -ffunction-sections -fdata-sections -c -include AutoGen.h -DSTRING_ARRAY_NAME=$(BASE_NAME)Strings
+ DEFINE GCC44_IA32_CC_FLAGS           = DEF(GCC44_ALL_CC_FLAGS) -m32 -malign-double -D EFI32
+ DEFINE GCC44_X64_CC_FLAGS            = DEF(GCC44_ALL_CC_FLAGS) -m64 "-DEFIAPI=__attribute__((ms_abi))" -DNO_BUILTIN_VA_FUNCS -mno-red-zone -Wno-address -mcmodel=large
+ DEFINE GCC44_IA32_X64_DLINK_COMMON   = -nostdlib -n -q --gc-sections --script=$(EDK_TOOLS_PATH)/Scripts/gcc4.4-ld-script
+diff --git a/BaseTools/Tests/GNUmakefile b/BaseTools/Tests/GNUmakefile
+index c63c216..ee99c37 100644
+--- a/BaseTools/Tests/GNUmakefile
++++ b/BaseTools/Tests/GNUmakefile
+@@ -14,7 +14,7 @@
+ all: test
+ 
+ test:
+-	@python RunTests.py
++	@python2 RunTests.py
+ 
+ clean:
+ 	find . -name '*.pyc' -exec rm '{}' ';'
 diff --git a/DuetPkg/CreateBootDisk.sh b/DuetPkg/CreateBootDisk.sh
 index 8d8543f..8fae7ca 100755
 --- a/DuetPkg/CreateBootDisk.sh
@@ -117,8 +184,31 @@ index f6bcdd9..4e8f862 100644
  [Rule.Common.UEFI_DRIVER.BINARY]
    FILE DRIVER = $(NAMED_GUID) {
      DXE_DEPEX    DXE_DEPEX Optional      |.depex
+diff --git a/DuetPkg/DuetPkgIa32.dsc b/DuetPkg/DuetPkgIa32.dsc
+index 2fb9fd5..73fcecb 100644
+--- a/DuetPkg/DuetPkgIa32.dsc
++++ b/DuetPkg/DuetPkgIa32.dsc
+@@ -28,7 +28,7 @@
+   DSC_SPECIFICATION              = 0x00010005
+   OUTPUT_DIRECTORY               = Build/DuetPkgIA32
+   SUPPORTED_ARCHITECTURES        = IA32
+-  BUILD_TARGETS                  = DEBUG
++  BUILD_TARGETS                  = DEBUG|RELEASE
+   SKUID_IDENTIFIER               = DEFAULT
+   FLASH_DEFINITION               = DuetPkg/DuetPkg.fdf
+ 
+@@ -177,6 +177,9 @@
+   MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
+   MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
+ 
++  ## Include DUET BootSectors
++  DuetPkg/BootSector/BootSector.inf
++
+   DuetPkg/FSVariable/FSVariable.inf
+   MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
+   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
 diff --git a/DuetPkg/DuetPkgX64.dsc b/DuetPkg/DuetPkgX64.dsc
-index 59fec1a..2baa5db 100644
+index c65c8fd..779d346 100644
 --- a/DuetPkg/DuetPkgX64.dsc
 +++ b/DuetPkg/DuetPkgX64.dsc
 @@ -28,7 +28,7 @@
@@ -138,7 +228,16 @@ index 59fec1a..2baa5db 100644
    DuetPkg/FSVariable/FSVariable.inf
    MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
-@@ -207,7 +208,7 @@
+@@ -195,6 +196,8 @@
+   MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
+   MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
+ 
++  ## Include DUET BootSectors
++  # DuetPkg/BootSector/BootSector.inf
+ 
+   DuetPkg/SmbiosGenDxe/SmbiosGen.inf
+   #DuetPkg/FvbRuntimeService/DUETFwh.inf
+@@ -207,7 +210,7 @@
      <LibraryClasses>
        PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
    }
@@ -147,7 +246,7 @@ index 59fec1a..2baa5db 100644
    UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
    UefiCpuPkg/CpuDxe/CpuDxe.inf
    PcAtChipsetPkg/8259InterruptControllerDxe/8259.inf
-@@ -228,19 +229,30 @@
+@@ -228,19 +231,30 @@
    MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
  
@@ -329,10 +428,10 @@ index d634a4d..2f2b57d 100644
    MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index 52bdefd..f4c2bab 100644
+index b08be66..abfd7b4 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
-@@ -181,8 +181,9 @@ INF  MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
+@@ -183,8 +183,9 @@ INF  MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
  INF  MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
  INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
  INF  MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
