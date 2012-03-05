@@ -14,6 +14,7 @@
 # disk that, when booted, makes a BIOS-based computer act like
 # one with a Unified Extensible Firmware Interface (UEFI).
 #
+# Version 0.1.4 - More cosmetic changes, Fix ${duetVersion} - Keshav aka the-ridikulus-rat - 04-MAR-2012
 # Version 0.1.3 - Modified for latest changes - mostly cosmetic changes - Keshav aka the-ridikulus-rat
 # Version 0.1.2 - added code to detect where script is, 6/14/2011
 # Version 0.1.1 - code cleanup, 6/12/2011
@@ -22,8 +23,8 @@
 
 minFat32Size="66586"
 
-thisScript=$(readlink -f $0)
-uefiDuetPath=$(dirname $thisScript)
+thisScript="$(readlink -f $0)"
+uefiDuetPath="$(dirname "${thisScript}")"
 
 if [[ ! -e "${uefiDuetPath}/copy_duet_files.sh" ]]; then
 	uefiDuetPath="${HOME}/bootduet/tianocore_uefi_duet_builds-tianocore_uefi_duet_installer"
@@ -98,7 +99,7 @@ GetParams() {
 			;;
 			-s) syslinuxPath="${2}"
 				echo "Will install SYSLINUX to the MBR"
-				installSyslinux=1
+				installSyslinux="1"
 				shift
 			;;
 			-n) partName="${2}"
@@ -107,7 +108,7 @@ GetParams() {
 			-h) ShowHelp
 				exit 0
 			;;
-			-iknowwhatimdoing) promptToContinue=0
+			-iknowwhatimdoing) promptToContinue="0"
 			;;
 			--help) ShowHelp
 				exit 0
@@ -130,7 +131,7 @@ GetParams() {
 
 	echo ""
 
-	if [[ "${targetPart}" == "" ]]; then
+	if [[ -z "${targetPart}" ]]; then
 		echo "No target partition specified! Aborting!"
 		ShowHelp
 		exit 1
@@ -393,32 +394,32 @@ PrepareDisk() {
 
 	mtabContents="$(cat /etc/mtab | grep ${targetPart})"
 
-	if [[ $mtabContents != "" ]]; then
-		origMountPoint=`echo $mtabContents | cut -f 2 -d " "`
+	if [[ "${mtabContents}" != "" ]]; then
+		origMountPoint="$(echo "${mtabContents}" | cut -f 2 -d " ")"
 		echo "Target partition mounted at $origMountPoint; temporarily unmounting..."
-		umount $origMountPoint > /dev/null
+		umount "${origMountPoint}" > /dev/null
 		if [[ $? -ne 0 ]]; then
 			echo "Unable to unmount ${targetPart} from $origMountPoint! Aborting!"
-	 echo "Hint: Use 'lsof | grep $origMountPoint' to find open files."
+	 echo "Hint: Use 'lsof | grep ${origMountPoint}' to find open files."
 	 exit 1
 		fi
 	fi # Target partition mounted
 
-	if [[ ${mkfsTarget} == "1" ]]; then
-		partSize=`cat $sysfsPath/size`
-		if [[ `cat $sysfsPath/size` -lt $minFat32Size ]]; then
-			$MKDOSFS -h $partStartSector -n $partName ${targetPart} &> /dev/null
+	if [[ "${mkfsTarget}" == "1" ]]; then
+		partSize="$(cat "${sysfsPath}/size")"
+		if [[ `cat "${sysfsPath}/size"` -lt "${minFat32Size}" ]]; then
+			"${MKDOSFS}" -h "${partStartSector}" -n "${partName}" "${targetPart}" &> /dev/null
 		else
-			$MKDOSFS -F 32 -h $partStartSector -n $partName ${targetPart} &> /dev/null
+			"${MKDOSFS}" -F 32 -h "${partStartSector}" -n "${partName}" "${targetPart}" &> /dev/null
 		fi
 		if [[ $? -ne 0 ]]; then
 			echo "Unable to create FAT filesystem on ${targetPart}! Aborting!"
 	 exit 1
 		fi
 	else # Didn't format, so plaster filesystem start sector in the hard way...
-		GetHex $partStartSector
-		echo "Writing $hexValue to boot partition's hidden sectors field"
-		echo 00: $hexValue | xxd -r | dd of=${targetPart} bs=1 seek=28 &> /dev/null
+		GetHex "${partStartSector}"
+		echo "Writing ${hexValue} to boot partition's hidden sectors field"
+		echo 00: ${hexValue} | xxd -r | dd of="${targetPart}" bs=1 seek=28 &> /dev/null
 	fi
 	GetFatBitness
 	if [[ "${fatBitness}" == "12" && "${lbaMode}" == "64" ]]; then
@@ -430,32 +431,32 @@ PrepareDisk() {
 
 	# Set boot flag (MBR) or "BIOS bootable" attribute (GPT)
 	# Also set the type code IF a new filesystem was created
-	if [[ $tableType == "gpt" ]]; then
-		$SGDISK -A $partNum:set:2 $targetDisk > /dev/null
+	if [[ "${tableType}" == "gpt" ]]; then
+		"${SGDISK}" -A "${partNum}:set:2" "${targetDisk}" > /dev/null
 		if [[ $? -ne 0 ]]; then
-			echo "sgdisk returned an error code while preparing $targetDisk! Aborting!"
+			echo "sgdisk returned an error code while preparing "${targetDisk}"! Aborting!"
 	 exit 1
 		fi
-		if [[ ${mkfsTarget} == "1" ]]; then
-			$SGDISK -t $partNum:EF00 $targetDisk
+		if [[ "${mkfsTarget}" == "1" ]]; then
+			"${SGDISK}" -t "${partNum}:EF00" "${targetDisk}"
 		fi
 	else # an MBR disk....
-	  $PARTED $targetDisk set $partNum boot on > /dev/null
+	  "${PARTED}" "${targetDisk}" set $partNum boot on > /dev/null
 		if [[ $? -ne 0 ]]; then
-			echo "parted returned an error code while preparing $targetDisk! Aborting!"
+			echo "parted returned an error code while preparing ${targetDisk} ! Aborting!"
 	 exit 1
 		fi
-		if [[ ${mkfsTarget} == "1" ]]; then
-			$SFDISK --change-id $targetDisk $partNum EF &> /dev/null
+		if [[ "${mkfsTarget}" == "1" ]]; then
+			"${SFDISK}" --change-id "${targetDisk}" "${partNum}" EF &> /dev/null
 		fi
 	fi # if/else GPT/MBR
 	echo ""
 } # PrepareDisk()
 
 InstallSyslinux() {
-	if [[ $installSyslinux == "1" ]]; then
+	if [[ "${installSyslinux}" == "1" ]]; then
 		echo "Installing SYSLINUX..."
-		dd if=$syslinuxFile of=$targetDisk bs=440 count=1 &> /dev/null
+		dd if="${syslinuxFile}" of="${targetDisk}" bs=440 count=1 &> /dev/null
 		if [[ $? -ne 0 ]]; then
 			echo "WARNING! SYSLINUX failed to install. Continuing, but disk may not boot!\n"
 		fi
@@ -467,7 +468,7 @@ InstallSyslinux() {
 InstallBootDuet() {
 	echo "Installing BootDuet..."
 	sleep 1 # Otherwise the BootDuet installation sometimes fails....
-	dd if=$bootDuetFile of=${targetPart} bs=1 skip=$bootDuetSkip seek=$bootDuetSkip count=$bootDuetCount &> /dev/null
+	dd if="${bootDuetFile}" of="${targetPart}" bs=1 skip="${bootDuetSkip}" seek="${bootDuetSkip}" count="${bootDuetCount}" &> /dev/null
 	if [[ $? -ne 0 ]]; then
 		echo "WARNING! BootDuet failed to install. Continuing, but disk may not boot!\n"
 	fi
@@ -476,31 +477,31 @@ InstallBootDuet() {
 InstallUefiDuet() {
 	echo "Installing UEFI DUET...."
 	if [[ $origMountPoint != "" ]]; then
-		tempMountPoint=$origMountPoint
+		tempMountPoint="${origMountPoint}"
 	fi
-	mkdir -p $tempMountPoint
+	mkdir -p "${tempMountPoint}"
 	sleep 1 # Otherwise the mount sometimes fails....
-	mount -t vfat ${targetPart} $tempMountPoint
+	mount -t vfat "${targetPart}" "${tempMountPoint}"
 	if [[ $? -ne 0 ]]; then
 		echo "Couldn't mount target partition! Unable to install UEFI DUET files. Aborting!"
 		exit 1
 	fi
 	# $copyDuetScript only works from its own directory, so cd in and then back
-	currentDir=`pwd`
-	cd ${uefiDuetPath}
-	if [[ ${duetVersion} == "2.3" ]]; then
-		sh $copyDuetScript $tempMountPoint UDK_X64 &> /dev/null
+	currentDir="${PWD}"
+	cd "${uefiDuetPath}"
+	if [[ "${duetVersion}" == "UDK" ]]; then
+		sh "${copyDuetScript}" "${tempMountPoint}" UDK_X64 &> /dev/null
 	else
-		sh $copyDuetScript $tempMountPoint EDK_UEFI64 &> /dev/null
+		sh "${copyDuetScript}" "${tempMountPoint}" EDK_UEFI64 &> /dev/null
 	fi
-	cd $currentDir
-	if [[ ${fatBitness} != "32" ]]; then
-		mv $tempMountPoint/EFILDR20 $tempMountPoint/$efildrTarget
+	cd "${currentDir}"
+	if [[ "${fatBitness}" != "32" ]]; then
+		mv "${tempMountPoint}/EFILDR20" "${tempMountPoint}/${efildrTarget}"
 	fi
 
-	if [[ $origMountPoint == "" ]]; then
-		umount $tempMountPoint
-		rmdir $tempMountPoint
+	if [[ "${origMountPoint}" == "" ]]; then
+		umount "${tempMountPoint}"
+		rmdir "${tempMountPoint}"
 	fi
 	echo ""
 } # InstallUefiDuet()
@@ -513,7 +514,7 @@ InstallUefiDuet() {
 
 GetParams $@
 FindStuff
-if [[ $promptToContinue == "1" ]]; then
+if [[ "${promptToContinue}" == "1" ]]; then
 	echo "Proceeding with installation will overwrite at least some data on ${targetPart}."
 	echo -n "This is your LAST CHANCE to abort! Do you want to continue (Y/N)? "
 	read yN
