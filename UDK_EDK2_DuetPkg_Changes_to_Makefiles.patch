@@ -291,6 +291,19 @@ index e0ddbd5..f2637e5 100644
  #include "EfiFlashMap.h"
  #include "FileIo.h"
  #include "FlashLayout.h"
+diff --git a/DuetPkg/Library/DuetBdsLib/BdsPlatform.c b/DuetPkg/Library/DuetBdsLib/BdsPlatform.c
+index 205c49c..a80cef4 100644
+--- a/DuetPkg/Library/DuetBdsLib/BdsPlatform.c
++++ b/DuetPkg/Library/DuetBdsLib/BdsPlatform.c
+@@ -1222,7 +1222,7 @@ Returns:
+   // have the time out
+   //
+   // BUGBUG: hard code timeout to 5 second to show logo in graphic mode.
+-  Timeout = 5;  
++  Timeout = 2;
+   if (Timeout != 0) {
+     PlatformBdsEnterFrontPage (Timeout, FALSE);
+   }
 diff --git a/DuetPkg/PostBuild.sh b/DuetPkg/PostBuild.sh
 index c77c0f3..0179b3b 100755
 --- a/DuetPkg/PostBuild.sh
