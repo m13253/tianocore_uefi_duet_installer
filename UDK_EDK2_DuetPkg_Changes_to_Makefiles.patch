@@ -185,7 +185,7 @@ index f6bcdd9..4e8f862 100644
    FILE DRIVER = $(NAMED_GUID) {
      DXE_DEPEX    DXE_DEPEX Optional      |.depex
 diff --git a/DuetPkg/DuetPkgIa32.dsc b/DuetPkg/DuetPkgIa32.dsc
-index 2fb9fd5..73fcecb 100644
+index ffca578..709c65a 100644
 --- a/DuetPkg/DuetPkgIa32.dsc
 +++ b/DuetPkg/DuetPkgIa32.dsc
 @@ -28,7 +28,7 @@
@@ -197,7 +197,7 @@ index 2fb9fd5..73fcecb 100644
    SKUID_IDENTIFIER               = DEFAULT
    FLASH_DEFINITION               = DuetPkg/DuetPkg.fdf
  
-@@ -177,6 +177,9 @@
+@@ -178,6 +178,9 @@
    MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
    MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
@@ -208,7 +208,7 @@ index 2fb9fd5..73fcecb 100644
    MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
 diff --git a/DuetPkg/DuetPkgX64.dsc b/DuetPkg/DuetPkgX64.dsc
-index c65c8fd..779d346 100644
+index ec9a254..efb7cd6 100644
 --- a/DuetPkg/DuetPkgX64.dsc
 +++ b/DuetPkg/DuetPkgX64.dsc
 @@ -28,7 +28,7 @@
@@ -220,7 +220,7 @@ index c65c8fd..779d346 100644
    SKUID_IDENTIFIER               = DEFAULT
    FLASH_DEFINITION               = DuetPkg/DuetPkg.fdf
  
-@@ -178,6 +178,7 @@
+@@ -180,6 +180,7 @@
    MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
    MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
@@ -228,7 +228,7 @@ index c65c8fd..779d346 100644
    DuetPkg/FSVariable/FSVariable.inf
    MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
-@@ -195,6 +196,8 @@
+@@ -197,6 +198,8 @@
    MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
    MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
  
@@ -237,7 +237,7 @@ index c65c8fd..779d346 100644
  
    DuetPkg/SmbiosGenDxe/SmbiosGen.inf
    #DuetPkg/FvbRuntimeService/DUETFwh.inf
-@@ -207,7 +210,7 @@
+@@ -209,7 +212,7 @@
      <LibraryClasses>
        PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
    }
@@ -246,7 +246,7 @@ index c65c8fd..779d346 100644
    UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
    UefiCpuPkg/CpuDxe/CpuDxe.inf
    PcAtChipsetPkg/8259InterruptControllerDxe/8259.inf
-@@ -228,19 +231,30 @@
+@@ -230,19 +233,30 @@
    MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
  
@@ -425,10 +425,10 @@ index 0000000..4b0b904
 +../FatPkg__GIT_SVN
 \ No newline at end of file
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index f4a5eec..7f9919e 100644
+index 2c174ba..6514ae7 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -394,8 +394,9 @@
+@@ -395,8 +395,9 @@
    MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
