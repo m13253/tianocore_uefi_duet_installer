@@ -7,34 +7,11 @@ index bd3141a..5dbaa9a 100755
  PYTHONPATH="`dirname $0`/../../Source/Python" \
 -    python "`dirname $0`/../../Source/Python"/AutoGen/`basename $0`.py $*
 +    python2 "`dirname $0`/../../Source/Python"/AutoGen/`basename $0`.py $*
-diff --git a/BaseTools/BinWrappers/PosixLike/RunBinToolFromBuildDir b/BaseTools/BinWrappers/PosixLike/RunBinToolFromBuildDir
-index 4821d24..db1313a 100755
---- a/BaseTools/BinWrappers/PosixLike/RunBinToolFromBuildDir
-+++ b/BaseTools/BinWrappers/PosixLike/RunBinToolFromBuildDir
-@@ -1,5 +1,5 @@
- #!/usr/bin/env bash
--#python `dirname $0`/RunToolFromSource.py `basename $0` $*
-+#python2 `dirname $0`/RunToolFromSource.py `basename $0` $*
- #exec `dirname $0`/../../../../C/bin/`basename $0` $*
- 
- TOOL_BASENAME=`basename $0`
-diff --git a/BaseTools/BinWrappers/PosixLike/RunToolFromSource b/BaseTools/BinWrappers/PosixLike/RunToolFromSource
-index 2cb8b86..51caaa4 100755
---- a/BaseTools/BinWrappers/PosixLike/RunToolFromSource
-+++ b/BaseTools/BinWrappers/PosixLike/RunToolFromSource
-@@ -1,5 +1,5 @@
- #!/usr/bin/env bash
--#python `dirname $0`/RunToolFromSource.py `basename $0` $*
-+#python2 `dirname $0`/RunToolFromSource.py `basename $0` $*
- PYTHONPATH="`dirname $0`/../../Source/Python" \
--    python "`dirname $0`/../../Source/Python"/`basename $0`/`basename $0`.py $*
-+    python2 "`dirname $0`/../../Source/Python"/`basename $0`/`basename $0`.py $*
- 
 diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
-index 68caf86..4f8728d 100644
+index 738cd65..bd8cfef 100644
 --- a/BaseTools/Conf/tools_def.template
 +++ b/BaseTools/Conf/tools_def.template
-@@ -1988,7 +1988,7 @@ NOOPT_DDK3790xASL_IPF_DLINK_FLAGS    = /NOLOGO /NODEFAULTLIB /LTCG /DLL /OPT:REF
+@@ -2537,7 +2537,7 @@ NOOPT_DDK3790xASL_IPF_DLINK_FLAGS    = /NOLOGO /NODEFAULTLIB /LTCG /DLL /OPT:REF
  DEBUG_*_*_OBJCOPY_ADDDEBUGFLAG     = --add-gnu-debuglink=$(DEBUG_DIR)\$(MODULE_NAME).debug
  RELEASE_*_*_OBJCOPY_ADDDEBUGFLAG   =
  
@@ -43,7 +20,7 @@ index 68caf86..4f8728d 100644
  DEFINE GCC_IA32_CC_FLAGS           = DEF(GCC_ALL_CC_FLAGS) -m32 -malign-double -freorder-blocks -freorder-blocks-and-partition -O2 -mno-stack-arg-probe
  DEFINE GCC_X64_CC_FLAGS            = DEF(GCC_ALL_CC_FLAGS) -mno-red-zone -Wno-address -mno-stack-arg-probe
  DEFINE GCC_IPF_CC_FLAGS            = DEF(GCC_ALL_CC_FLAGS) -minline-int-divide-min-latency
-@@ -2010,7 +2010,7 @@ DEFINE GCC_IA32_RC_FLAGS           = -I binary -O elf32-i386        -B i386 --re
+@@ -2559,7 +2559,7 @@ DEFINE GCC_IA32_RC_FLAGS           = -I binary -O elf32-i386        -B i386 --re
  DEFINE GCC_X64_RC_FLAGS            = -I binary -O elf64-x86-64      -B i386 --rename-section .data=.hii
  DEFINE GCC_IPF_RC_FLAGS            = -I binary -O elf64-ia64-little -B ia64 --rename-section .data=.hii
  
@@ -65,6 +42,14 @@ index c63c216..ee99c37 100644
  
  clean:
  	find . -name '*.pyc' -exec rm '{}' ';'
+diff --git a/Clover b/Clover
+new file mode 120000
+index 0000000..3592552
+--- /dev/null
++++ b/Clover
+@@ -0,0 +1 @@
++../../cloverefiboot__GIT_SVN
+\ No newline at end of file
 diff --git a/DuetPkg/CreateBootDisk.sh b/DuetPkg/CreateBootDisk.sh
 index 8d8543f..8fae7ca 100755
 --- a/DuetPkg/CreateBootDisk.sh
@@ -91,7 +76,7 @@ index 8d8543f..8fae7ca 100755
  
  export EFI_BOOT_MEDIA=$2
 diff --git a/DuetPkg/DuetPkg.fdf b/DuetPkg/DuetPkg.fdf
-index f6bcdd9..4e8f862 100644
+index f6bcdd9..d920184 100644
 --- a/DuetPkg/DuetPkg.fdf
 +++ b/DuetPkg/DuetPkg.fdf
 @@ -51,7 +51,8 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
@@ -113,7 +98,7 @@ index f6bcdd9..4e8f862 100644
  INF  MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
  INF  UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
  INF  UefiCpuPkg/CpuDxe/CpuDxe.inf
-@@ -78,29 +79,40 @@ INF  PcAtChipsetPkg/8254TimerDxe/8254Timer.inf
+@@ -78,29 +79,36 @@ INF  PcAtChipsetPkg/8254TimerDxe/8254Timer.inf
  INF  PcAtChipsetPkg/PcatRealTimeClockRuntimeDxe/PcatRealTimeClockRuntimeDxe.inf
  INF  DuetPkg/PciRootBridgeNoEnumerationDxe/PciRootBridgeNoEnumeration.inf
  INF  DuetPkg/PciBusNoEnumerationDxe/PciBusNoEnumeration.inf
@@ -130,15 +115,11 @@ index f6bcdd9..4e8f862 100644
 -INF  MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
 +# INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
 +# INF  MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
- 
-+  # VirtualBox IDE Support
-+# INF  VBoxPkg/VBoxIdeBusDxe/VBoxIdeBusDxe.inf
-+# INF  VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
 +
-+  # Various FS Utilities from VirtualBox
++  ## Various FS Utilities from VirtualBox
 +# INF VBoxPkg/VBoxFsDxe/VBoxIso9660.inf
 +# INF VBoxPkg/VBoxFsDxe/VBoxHfs.inf
-+  
+ 
    # Usb Support
  INF  MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
  INF  MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
@@ -160,7 +141,7 @@ index f6bcdd9..4e8f862 100644
  
  INF  MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
  INF  MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
-@@ -110,6 +122,10 @@ INF  DuetPkg/BiosVideoThunkDxe/BiosVideo.inf
+@@ -110,6 +118,10 @@ INF  DuetPkg/BiosVideoThunkDxe/BiosVideo.inf
    # Binary INF file to support toggle among different CPU architectures.
  INF  RuleOverride=BINARY FatBinPkg/EnhancedFatDxe/Fat.inf
  
@@ -171,7 +152,7 @@ index f6bcdd9..4e8f862 100644
  FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
      SECTION RAW = MdeModulePkg/Logo/Logo.bmp
    }
-@@ -142,6 +158,12 @@ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
+@@ -142,6 +154,12 @@ FILE FREEFORM = PCD(gEfiIntelFrameworkModulePkgTokenSpaceGuid.PcdLogoFile) {
          PE32     PE32                    $(INF_OUTPUT)/$(MODULE_NAME).efi
    }
  
@@ -208,7 +189,7 @@ index ffca578..709c65a 100644
    MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
 diff --git a/DuetPkg/DuetPkgX64.dsc b/DuetPkg/DuetPkgX64.dsc
-index ec9a254..efb7cd6 100644
+index ec9a254..c9f29b8 100644
 --- a/DuetPkg/DuetPkgX64.dsc
 +++ b/DuetPkg/DuetPkgX64.dsc
 @@ -28,7 +28,7 @@
@@ -246,15 +227,11 @@ index ec9a254..efb7cd6 100644
    UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
    UefiCpuPkg/CpuDxe/CpuDxe.inf
    PcAtChipsetPkg/8259InterruptControllerDxe/8259.inf
-@@ -230,19 +233,30 @@
+@@ -230,19 +233,26 @@
    MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
  
-+  # VirtualBox IDE Support
-+  # VBoxPkg/VBoxIdeBusDxe/VBoxIdeBusDxe.inf
-+  # VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
-+
-+  # Various FS Utilities from VirtualBox
++  ## Various FS Utilities from VirtualBox
 +  # VBoxPkg/VBoxFsDxe/VBoxIso9660.inf
 +  # VBoxPkg/VBoxFsDxe/VBoxHfs.inf
 +
@@ -264,7 +241,7 @@ index ec9a254..efb7cd6 100644
 +  MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
    MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
    MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
-+  # MdeModulePkg/Bus/Usb/UsbMouseDxe/UsbMouseDxe.inf
++  MdeModulePkg/Bus/Usb/UsbMouseDxe/UsbMouseDxe.inf
    MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
  
    # ISA Support
@@ -274,7 +251,7 @@ index ec9a254..efb7cd6 100644
    IntelFrameworkModulePkg/Bus/Isa/IsaSerialDxe/IsaSerialDxe.inf
    IntelFrameworkModulePkg/Bus/Isa/Ps2KeyboardDxe/Ps2keyboardDxe.inf
 -  IntelFrameworkModulePkg/Bus/Isa/IsaFloppyDxe/IsaFloppyDxe.inf
-+  # IntelFrameworkModulePkg/Bus/Isa/Ps2MouseDxe/Ps2MouseDxe.inf
++  IntelFrameworkModulePkg/Bus/Isa/Ps2MouseDxe/Ps2MouseDxe.inf
  
    MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
    MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
@@ -425,34 +402,60 @@ index 0000000..4b0b904
 +../FatPkg__GIT_SVN
 \ No newline at end of file
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index 2c174ba..6514ae7 100644
+index a312ddb..9b3aa06 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -395,8 +395,9 @@
-   MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
-   MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
+@@ -393,6 +393,9 @@
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
--  IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
--  PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
-+  VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
-+  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
-+  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
+   IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
+   PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
++  # VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
++  # MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
++  # MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
    MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
    MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+@@ -402,6 +405,10 @@
+       BltLib|OptionRomPkg/Library/FrameBufferBltLib/FrameBufferBltLib.inf
+   }
+ 
++  ## Various FS Utilities from VirtualBox
++  # VBoxPkg/VBoxFsDxe/VBoxIso9660.inf
++  # VBoxPkg/VBoxFsDxe/VBoxHfs.inf
++
+   #
+   # ISA Support
+   #
+@@ -410,6 +417,7 @@
+   IntelFrameworkModulePkg/Bus/Isa/IsaSerialDxe/IsaSerialDxe.inf
+   IntelFrameworkModulePkg/Bus/Isa/Ps2KeyboardDxe/Ps2keyboardDxe.inf
+   IntelFrameworkModulePkg/Bus/Isa/IsaFloppyDxe/IsaFloppyDxe.inf
++  IntelFrameworkModulePkg/Bus/Isa/Ps2MouseDxe/Ps2MouseDxe.inf
+ 
+   #
+   # SMBIOS Support
+@@ -448,8 +456,10 @@
+   #
+   MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
+   MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
++  MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
+   MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
+   MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
++  MdeModulePkg/Bus/Usb/UsbMouseDxe/UsbMouseDxe.inf
+   MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+ 
+ !ifdef $(CSM_ENABLE)
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index 16f21fe..52c1a8b 100644
+index 4908298..5aa1f44 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
-@@ -189,8 +189,9 @@ INF  MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
- INF  MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
- INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
+@@ -192,6 +192,9 @@ INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
  INF  MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
--INF  IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
--INF  PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
-+INF  VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
-+INF  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
-+INF  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
+ INF  IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
+ INF  PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
++# INF  VBoxPkg/VBoxIdeControllerDxe/VBoxIdeControllerDxe.inf
++# INF  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
++# INF  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
  INF  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
  INF  MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
  INF  MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
