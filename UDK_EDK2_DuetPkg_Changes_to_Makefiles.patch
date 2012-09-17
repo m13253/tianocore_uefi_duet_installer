@@ -8,7 +8,7 @@ index bd3141a..5dbaa9a 100755
 -    python "`dirname $0`/../../Source/Python"/AutoGen/`basename $0`.py $*
 +    python2 "`dirname $0`/../../Source/Python"/AutoGen/`basename $0`.py $*
 diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
-index 738cd65..bd8cfef 100644
+index a82404a..9b8cc89 100644
 --- a/BaseTools/Conf/tools_def.template
 +++ b/BaseTools/Conf/tools_def.template
 @@ -2537,7 +2537,7 @@ NOOPT_DDK3790xASL_IPF_DLINK_FLAGS    = /NOLOGO /NODEFAULTLIB /LTCG /DLL /OPT:REF
@@ -166,7 +166,7 @@ index f6bcdd9..d920184 100644
    FILE DRIVER = $(NAMED_GUID) {
      DXE_DEPEX    DXE_DEPEX Optional      |.depex
 diff --git a/DuetPkg/DuetPkgIa32.dsc b/DuetPkg/DuetPkgIa32.dsc
-index ffca578..709c65a 100644
+index b35ba91..936fa5c 100644
 --- a/DuetPkg/DuetPkgIa32.dsc
 +++ b/DuetPkg/DuetPkgIa32.dsc
 @@ -28,7 +28,7 @@
@@ -178,7 +178,7 @@ index ffca578..709c65a 100644
    SKUID_IDENTIFIER               = DEFAULT
    FLASH_DEFINITION               = DuetPkg/DuetPkg.fdf
  
-@@ -178,6 +178,9 @@
+@@ -180,6 +180,9 @@
    MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
    MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
@@ -189,7 +189,7 @@ index ffca578..709c65a 100644
    MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
 diff --git a/DuetPkg/DuetPkgX64.dsc b/DuetPkg/DuetPkgX64.dsc
-index ec9a254..c9f29b8 100644
+index 65c0d14..6e53c28 100644
 --- a/DuetPkg/DuetPkgX64.dsc
 +++ b/DuetPkg/DuetPkgX64.dsc
 @@ -28,7 +28,7 @@
@@ -201,7 +201,7 @@ index ec9a254..c9f29b8 100644
    SKUID_IDENTIFIER               = DEFAULT
    FLASH_DEFINITION               = DuetPkg/DuetPkg.fdf
  
-@@ -180,6 +180,7 @@
+@@ -181,6 +181,7 @@
    MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
    MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
  
@@ -209,7 +209,7 @@ index ec9a254..c9f29b8 100644
    DuetPkg/FSVariable/FSVariable.inf
    MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
-@@ -197,6 +198,8 @@
+@@ -198,6 +199,8 @@
    MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
    MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
  
@@ -218,7 +218,7 @@ index ec9a254..c9f29b8 100644
  
    DuetPkg/SmbiosGenDxe/SmbiosGen.inf
    #DuetPkg/FvbRuntimeService/DUETFwh.inf
-@@ -209,7 +212,7 @@
+@@ -210,7 +213,7 @@
      <LibraryClasses>
        PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
    }
@@ -227,7 +227,7 @@ index ec9a254..c9f29b8 100644
    UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
    UefiCpuPkg/CpuDxe/CpuDxe.inf
    PcAtChipsetPkg/8259InterruptControllerDxe/8259.inf
-@@ -230,19 +233,26 @@
+@@ -231,19 +234,26 @@
    MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
  
@@ -402,10 +402,10 @@ index 0000000..4b0b904
 +../FatPkg__GIT_SVN
 \ No newline at end of file
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index a312ddb..9b3aa06 100644
+index 9ff4a5d..f16797f 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -393,6 +393,9 @@
+@@ -429,6 +429,9 @@
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
    IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
    PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
@@ -415,7 +415,7 @@ index a312ddb..9b3aa06 100644
    MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
    MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
-@@ -402,6 +405,10 @@
+@@ -438,6 +441,10 @@
        BltLib|OptionRomPkg/Library/FrameBufferBltLib/FrameBufferBltLib.inf
    }
  
@@ -426,7 +426,7 @@ index a312ddb..9b3aa06 100644
    #
    # ISA Support
    #
-@@ -410,6 +417,7 @@
+@@ -446,6 +453,7 @@
    IntelFrameworkModulePkg/Bus/Isa/IsaSerialDxe/IsaSerialDxe.inf
    IntelFrameworkModulePkg/Bus/Isa/Ps2KeyboardDxe/Ps2keyboardDxe.inf
    IntelFrameworkModulePkg/Bus/Isa/IsaFloppyDxe/IsaFloppyDxe.inf
@@ -434,7 +434,7 @@ index a312ddb..9b3aa06 100644
  
    #
    # SMBIOS Support
-@@ -448,8 +456,10 @@
+@@ -484,8 +492,10 @@
    #
    MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
    MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
@@ -446,7 +446,7 @@ index a312ddb..9b3aa06 100644
  
  !ifdef $(CSM_ENABLE)
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index 4908298..5aa1f44 100644
+index 74ae134..b08c5c5 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
 @@ -192,6 +192,9 @@ INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
