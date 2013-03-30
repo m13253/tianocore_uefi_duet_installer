@@ -76,7 +76,7 @@ index 8d8543f..8fae7ca 100755
  
  export EFI_BOOT_MEDIA=$2
 diff --git a/DuetPkg/DuetPkg.fdf b/DuetPkg/DuetPkg.fdf
-index f6bcdd9..d920184 100644
+index f6bcdd9..4bb2dd6 100644
 --- a/DuetPkg/DuetPkg.fdf
 +++ b/DuetPkg/DuetPkg.fdf
 @@ -51,7 +51,8 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
@@ -98,16 +98,7 @@ index f6bcdd9..d920184 100644
  INF  MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
  INF  UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
  INF  UefiCpuPkg/CpuDxe/CpuDxe.inf
-@@ -78,29 +79,36 @@ INF  PcAtChipsetPkg/8254TimerDxe/8254Timer.inf
- INF  PcAtChipsetPkg/PcatRealTimeClockRuntimeDxe/PcatRealTimeClockRuntimeDxe.inf
- INF  DuetPkg/PciRootBridgeNoEnumerationDxe/PciRootBridgeNoEnumeration.inf
- INF  DuetPkg/PciBusNoEnumerationDxe/PciBusNoEnumeration.inf
--INF  IntelFrameworkModulePkg/Bus/Pci/VgaMiniPortDxe/VgaMiniPortDxe.inf
--INF  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
-+# INF  IntelFrameworkModulePkg/Bus/Pci/VgaMiniPortDxe/VgaMiniPortDxe.inf
-+# INF  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
- 
-   # IDE/AHCI Support
+@@ -85,22 +86,29 @@ INF  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
  INF  DuetPkg/SataControllerDxe/SataControllerDxe.inf
  INF  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
  INF  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
@@ -402,10 +393,10 @@ index 0000000..4b0b904
 +../FatPkg__GIT_SVN
 \ No newline at end of file
 diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
-index 9ff4a5d..f16797f 100644
+index dce9ce1..cb0b707 100644
 --- a/OvmfPkg/OvmfPkgX64.dsc
 +++ b/OvmfPkg/OvmfPkgX64.dsc
-@@ -429,6 +429,9 @@
+@@ -438,15 +438,25 @@
    MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
    IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
    PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
@@ -415,7 +406,12 @@ index 9ff4a5d..f16797f 100644
    MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
    MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
    MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
-@@ -438,6 +441,10 @@
+ 
++  IntelFrameworkModulePkg/Bus/Pci/VgaMiniPortDxe/VgaMiniPortDxe.inf
++  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
++
+   OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf {
+     <LibraryClasses>
        BltLib|OptionRomPkg/Library/FrameBufferBltLib/FrameBufferBltLib.inf
    }
  
@@ -426,7 +422,7 @@ index 9ff4a5d..f16797f 100644
    #
    # ISA Support
    #
-@@ -446,6 +453,7 @@
+@@ -455,6 +465,7 @@
    IntelFrameworkModulePkg/Bus/Isa/IsaSerialDxe/IsaSerialDxe.inf
    IntelFrameworkModulePkg/Bus/Isa/Ps2KeyboardDxe/Ps2keyboardDxe.inf
    IntelFrameworkModulePkg/Bus/Isa/IsaFloppyDxe/IsaFloppyDxe.inf
@@ -434,7 +430,7 @@ index 9ff4a5d..f16797f 100644
  
    #
    # SMBIOS Support
-@@ -484,8 +492,10 @@
+@@ -493,8 +504,10 @@
    #
    MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
    MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
@@ -446,10 +442,10 @@ index 9ff4a5d..f16797f 100644
  
  !ifdef $(CSM_ENABLE)
 diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
-index 74ae134..b08c5c5 100644
+index d023cb1..f0b5530 100644
 --- a/OvmfPkg/OvmfPkgX64.fdf
 +++ b/OvmfPkg/OvmfPkgX64.fdf
-@@ -192,6 +192,9 @@ INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
+@@ -209,10 +209,16 @@ INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
  INF  MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
  INF  IntelFrameworkModulePkg/Bus/Pci/IdeBusDxe/IdeBusDxe.inf
  INF  PcAtChipsetPkg/Bus/Pci/IdeControllerDxe/IdeControllerDxe.inf
@@ -459,6 +455,13 @@ index 74ae134..b08c5c5 100644
  INF  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
  INF  MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
  INF  MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
+ 
++INF  IntelFrameworkModulePkg/Bus/Pci/VgaMiniPortDxe/VgaMiniPortDxe.inf
++INF  IntelFrameworkModulePkg/Universal/Console/VgaClassDxe/VgaClassDxe.inf
++
+ INF  PcAtChipsetPkg/IsaAcpiDxe/IsaAcpi.inf
+ INF  IntelFrameworkModulePkg/Bus/Isa/IsaBusDxe/IsaBusDxe.inf
+ 
 diff --git a/VBoxPkg b/VBoxPkg
 new file mode 120000
 index 0000000..dcbf574
