@@ -6,9 +6,6 @@
 
 set PROCESSOR=X64
 
-@if "%2"=="UDK_X64" set SHELL_DIR=%UEFI_DUET%\Shell\UDK_X64
-@if "%2"=="EDK_UEFI64" set SHELL_DIR=%UEFI_DUET%\Shell\EDK_X64
-
 @set WIN_BIN_DIR=%UEFI_DUET%\Windows_Binaries
 @set BOOTSECTOR_BIN_DIR=%UEFI_DUET%\BootSector
 @set EFILDR_DIR=%UEFI_DUET%\Efildr\%DUET_BUILD%
@@ -59,18 +56,15 @@ set PROCESSOR=X64
 
 :CreateUSB_FAT32_step2
 @copy %EFILDR_DIR%\EfiLdr20 %EFI_BOOT_DISK%\Efildr20 /y
-@copy %SHELL_DIR%\LoadFv.efi %EFI_BOOT_DISK%\LoadFv.efi
-@copy %SHELL_DIR%\DumpBs.efi %EFI_BOOT_DISK%\DumpBs.efi
-@copy %EFILDR_DIR%\*.fv %EFI_BOOT_DISK%\
-@mkdir %EFI_BOOT_DISK%\efi
-@mkdir %EFI_BOOT_DISK%\efi\Shell
-@copy %SHELL_DIR%\Shell_Full.efi %EFI_BOOT_DISK%\efi\Shell\Shell.efi /y
+@mkdir %EFI_BOOT_DISK%\EFI
+@mkdir %EFI_BOOT_DISK%\EFI\tools
+@copy %SHELL_DIR%\*.efi %EFI_BOOT_DISK%\EFI\tools\ /y
 @echo --------
 @goto Files
 
 :Files
-@mkdir %EFI_BOOT_DISK%\efi\extras
-@copy %EXTRAS_DIR%\*.efi %EFI_BOOT_DISK%\efi\extras\
+@mkdir %EFI_BOOT_DISK%\EFI\tools\extras
+@copy %EXTRAS_DIR%\*.efi %EFI_BOOT_DISK%\EFI\tools\extras
 @echo -------- 
 @echo Files have been copied to the USB flash drive successfully
 @echo Tianocore UEFI DUET FAT32 %DUET_BUILD% Build Done!

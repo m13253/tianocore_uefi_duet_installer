@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 _WD="${PWD}/"
 _UEFI_DUET_DIR="${_WD}/"
@@ -34,16 +34,14 @@ then
 fi
 
 
-if [ "${_PROCESS_CONTINUE}" == 'TRUE' ]
-then
+if [[ "${_PROCESS_CONTINUE}" == 'TRUE' ]]; then
 	### check for root
-	if ! [ ${UID} -eq 0 ]; then 
+	if ! [ "${UID}" -eq 0 ]; then 
 		echo "ERROR: Please run as root user!"
 		exit 1
 	fi
 	
-	if [ "${2}" == '' ]
-	then
+	if [[ "${2}" == '' ]]; then
 		echo "_UEFI_DUET_BUILD not defined"
 		exit 1
 	fi
@@ -54,15 +52,10 @@ _UEFI_DUET_BUILD="${2}"
 
 _UEFI_PROCESSOR_ARCH="X64"
 
-[ "${_UEFI_DUET_BUILD}" = "UDK_X64" ] && _UEFI_SHELL_DIR="${_UEFI_DUET_DIR}/Shell/UDK_X64/"
-
-[ "${_UEFI_DUET_BUILD}" = "EDK_UEFI64" ] && _UEFI_SHELL_DIR="${_UEFI_DUET_DIR}/Shell/EDK_X64/"
-
 _UEFI_DUET_EFILDR_DIR="${_UEFI_DUET_DIR}/Efildr/${_UEFI_DUET_BUILD}/"
 _UEFI_DUET_EXTRAS_DIR="${_UEFI_DUET_DIR}/Extras/${_UEFI_PROCESSOR_ARCH}/"
 
-if [ "${_PROCESS_CONTINUE}" == 'TRUE' ]
-then
+if [[ "${_PROCESS_CONTINUE}" == 'TRUE' ]]; then
 	echo
 	echo "--------"
 	echo "PARTITION MOUNTPOINT = ${_UEFI_DUET_MP}"
@@ -76,16 +69,12 @@ then
 	set -x -e
 	
 	cp --verbose "${_UEFI_DUET_EFILDR_DIR}/Efildr20" "${_UEFI_DUET_MP}/EFILDR20"
-	# cp --verbose "${_UEFI_DUET_EFILDR_DIR}"/*.fv "${_UEFI_DUET_MP}/"
 	
-	cp --verbose "${_UEFI_SHELL_DIR}/LoadFv.efi" "${_UEFI_DUET_MP}/LoadFv.efi" || true
-	cp --verbose "${_UEFI_SHELL_DIR}/DumpBs.efi" "${_UEFI_DUET_MP}/DumpBs.efi" || true
+	mkdir -p "${_UEFI_DUET_MP}/EFI/tools/"
+	cp --verbose "${_UEFI_SHELL_DIR}"/*.efi "${_UEFI_DUET_MP}/EFI/tools"/
 	
-	mkdir -p "${_UEFI_DUET_MP}/efi/Shell"
-	cp --verbose "${_UEFI_SHELL_DIR}/Shell_Full.efi" "${_UEFI_DUET_MP}/efi/Shell/Shell.efi"
-	
-	mkdir -p "${_UEFI_DUET_MP}/efi/extras"
-	cp --verbose "${_UEFI_DUET_EXTRAS_DIR}"/*.efi "${_UEFI_DUET_MP}/efi/extras/" || true
+	mkdir -p "${_UEFI_DUET_MP}/EFI/tools/extras"
+	cp --verbose "${_UEFI_DUET_EXTRAS_DIR}"/*.efi "${_UEFI_DUET_MP}/EFI/tools/extras/" || true
 	
 	set +x +e
 	
@@ -100,7 +89,6 @@ unset _UEFI_DUET_DIR
 unset _UEFI_DUET_MP
 unset _UEFI_DUET_BUILD
 unset _UEFI_PROCESSOR_ARCH
-unset _UEFI_SHELL_DIR
 unset _UEFI_DUET_EFILDR_DIR
 unset _UEFI_DUET_EXTRAS_DIR
 unset _PROCESS_CONTINUE
