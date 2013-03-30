@@ -9,6 +9,7 @@ set PROCESSOR=X64
 @set WIN_BIN_DIR=%UEFI_DUET%\Windows_Binaries
 @set BOOTSECTOR_BIN_DIR=%UEFI_DUET%\BootSector
 @set EFILDR_DIR=%UEFI_DUET%\Efildr\%DUET_BUILD%
+@set SHELL_DIR=%UEFI_DUET%\Shell
 @set EXTRAS_DIR=%UEFI_DUET%\Extras\%PROCESSOR%
 @echo on
 
