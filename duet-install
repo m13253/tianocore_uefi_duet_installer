@@ -14,6 +14,7 @@
 # disk that, when booted, makes a BIOS-based computer act like
 # one with a Unified Extensible Firmware Interface (UEFI).
 #
+# Version 0.1.5 - Changed partition table type detection code
 # Version 0.1.4 - More cosmetic changes, Fix ${duetVersion} - Keshav aka the-ridikulus-rat - 04-MAR-2012
 # Version 0.1.3 - Modified for latest changes - mostly cosmetic changes - Keshav aka the-ridikulus-rat
 # Version 0.1.2 - added code to detect where script is, 6/14/2011
@@ -271,11 +272,11 @@ FindStuff() {
 	fi # if will NOT be making filesystem on target partition
 
 	# Determine the partition table type
-	if [[ "$(file -s "${targetDisk}" | grep partition | grep starthead)" ]]; then
+	ptLine=`parted "${targetDisk}" print | grep "Partition Table"`
+	if [[ "$(echo $ptLine | grep msdos)" ]]; then
 		tableType="mbr"
-		if [[ "$(file -s "${targetDisk}" | grep 0xee)" ]]; then
-			tableType="gpt"
-		fi
+	elif [[ "$(echo $ptLine | grep gpt)" ]]; then
+		tableType="gpt"
 	fi
 
 	if [[ "${tableType}" != "mbr" && "${tableType}" != "gpt" ]]; then
