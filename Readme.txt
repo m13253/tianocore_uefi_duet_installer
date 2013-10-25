@@ -1,3 +1,5 @@
+NOTE: THIS REPO IS NO LONGER ACTIVELY MAINTAINED. PLEASE USE http://sourceforge.net/projects/cloverefiboot/ INSTEAD.
+
 This repo contains compiled build of tianocore.sourceforge.net UDK/EDK2 DuetPkg firmware and tianocore.sourceforge.net EDK DUET firmware (EDK_UEFI64 version that of SVN repository as on 15th September 2010 - revision 236 - seems like EDK development has stopped).
 
 
