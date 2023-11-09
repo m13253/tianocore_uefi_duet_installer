@@ -3258,11 +3258,11 @@ CVfrStringDB::GetVarStoreNameFormStringId (
   UINT8       BlockType;
   EFI_HII_STRING_PACKAGE_HDR *PkgHeader;
   
-  if (mStringFileName == '\0' ) {
+  if (NULL == mStringFileName || NULL == *mStringFileName) {
     return NULL;
   }
 
-  if ((pInFile = fopen (mStringFileName, "rb")) == NULL) {
+  if (!(pInFile = fopen (mStringFileName, "rb"))) {
     return NULL;
   }
 
